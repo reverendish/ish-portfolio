@@ -18,10 +18,9 @@ export async function GET(req: NextRequest) {
     if (!res.ok) return NextResponse.json({ director: null });
 
     const data = await res.json();
+    // Match desktop app: take first non-resigned officer, any role
     const director = (data.items || []).find(
-      (o: Record<string, unknown>) =>
-        (o.officer_role === "director" || o.officer_role === "llp-member") &&
-        !o.resigned_on
+      (o: Record<string, unknown>) => !o.resigned_on
     );
 
     if (!director) return NextResponse.json({ director: null });
