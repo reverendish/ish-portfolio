@@ -9,16 +9,13 @@ export async function GET(req: NextRequest) {
   if (!apiKey) return NextResponse.json({ error: "API key not configured" }, { status: 500 });
 
   const credentials = Buffer.from(`${apiKey}:`).toString("base64");
-
   const res = await fetch(
     `https://api.company-information.service.gov.uk/search/companies?q=${encodeURIComponent(q)}&items_per_page=10`,
     { headers: { Authorization: `Basic ${credentials}` } }
   );
-
   if (!res.ok) return NextResponse.json({ error: "Companies House error" }, { status: 502 });
 
   const data = await res.json();
-
   const companies = (data.items || [])
     .filter((c: Record<string, unknown>) => c.company_status === "active")
     .slice(0, 8)
@@ -28,11 +25,8 @@ export async function GET(req: NextRequest) {
         name: c.title,
         number: c.company_number,
         type: c.company_type,
-        status: c.company_status,
         incorporated: c.date_of_creation,
-        address: addr
-          ? [addr.address_line_1, addr.locality, addr.postal_code].filter(Boolean).join(", ")
-          : "",
+        address: addr ? [addr.address_line_1, addr.locality, addr.postal_code].filter(Boolean).join(", ") : "",
         sic: (c.description as string) || "",
       };
     });
