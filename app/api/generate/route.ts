@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const prompts: Record<string, (i: Record<string, string>) => string> = {
-  outreach: (i) => `Write a short, casual outreach DM (under 60 words) from Ish, a developer who builds AI automations for small businesses. Target: ${i.name}, ${i.business}. What they do/posted: ${i.context}. Sound human, no em dashes, no corporate language, no "I hope this finds you well". Open with something specific about them. End with a simple question.`,
+  outreach: (i) => `Write a short cold email (under 70 words) from Ish, a developer based in Colchester who builds AI automations for small businesses. The recipient's name is ${i.name} and they run ${i.business}. Additional context: ${i.context}. Rules: address them by first name only, sound like a real person not a marketer, no em dashes, no "I hope this finds you well", no buzzwords like "streamline" or "leverage", be specific about what you could help with based on their business type, end with one simple low-pressure question. Do not mention AI explicitly in the opening line.`,
 
   review: (i) => `Write a WhatsApp/SMS message asking ${i.customer} for a Google review after a ${i.job} job. From ${i.businessName}. Keep it under 50 words. Warm, personal, not pushy. Include a placeholder [GOOGLE REVIEW LINK].`,
 

@@ -20,10 +20,14 @@ export default function OutreachAgent() {
   const [context, setContext] = useState("");
   const [message, setMessage] = useState("");
   const [phase, setPhase] = useState<Phase>("search");
+  const [director, setDirector] = useState<string | null>(null);
   const [searching, setSearching] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
+
+  const toTitleCase = (str: string) =>
+    str.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
 
   const search = async () => {
     if (!query.trim()) return;
@@ -45,11 +49,17 @@ export default function OutreachAgent() {
     }
   };
 
-  const select = (c: Company) => {
+  const select = async (c: Company) => {
     setSelected(c);
     setPhase("selected");
     setMessage("");
     setContext("");
+    setDirector(null);
+    try {
+      const res = await fetch(`/api/officers?number=${c.number}`);
+      const data = await res.json();
+      setDirector(data.director || null);
+    } catch { /* non-critical */ }
   };
 
   const generate = async () => {
@@ -63,8 +73,8 @@ export default function OutreachAgent() {
         body: JSON.stringify({
           tool: "outreach",
           inputs: {
-            name: selected.name,
-            business: `${selected.sic || selected.type}, ${selected.address}`,
+            name: director || toTitleCase(selected.name),
+            business: `${toTitleCase(selected.name)}, ${selected.sic || selected.type}, ${selected.address}`,
             context: context || `Incorporated ${selected.incorporated}`,
           },
         }),
@@ -192,8 +202,10 @@ export default function OutreachAgent() {
           {phase !== "search" && selected && (
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
-                <div style={{ fontWeight: 600, color: "var(--text)" }}>{selected.name}</div>
-                <div style={{ fontSize: "0.8rem", color: "var(--muted)", marginTop: "2px" }}>{selected.address}</div>
+                <div style={{ fontWeight: 600, color: "var(--text)" }}>{toTitleCase(selected.name)}</div>
+                <div style={{ fontSize: "0.8rem", color: "var(--muted)", marginTop: "2px" }}>
+                  {director ? `Director: ${director} · ` : ""}{selected.address}
+                </div>
               </div>
               <button onClick={reset} style={{ fontSize: "0.8rem", color: "var(--muted)", background: "none", border: "none", cursor: "pointer" }}>
                 Change
