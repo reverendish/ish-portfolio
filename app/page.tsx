@@ -106,10 +106,9 @@ function ToolDemo({ toolKey }: { toolKey: string }) {
 }
 
 const TOOLS = [
-  { key: "outreach", href: "/tools/outreach-agent", title: "Outreach Agent", tag: "Sales", desc: "Paste in a prospect's name and what they do — get a personalised pitch in seconds." },
-  { key: "review", href: "/tools/review-request", title: "Review Request", tag: "Reputation", desc: "Generate a personalised WhatsApp/SMS asking customers for a Google review." },
-  { key: "social", href: "/tools/social-posts", title: "Social Posts", tag: "Content", desc: "Tell it what you did today — get 3 ready-to-post captions with hashtags." },
-  { key: "quote", href: "/tools/quote-builder", title: "Quote Builder", tag: "Admin", desc: "Fill in job details and get a formatted, professional quote ready to send." },
+  { key: "outreach", href: "/tools/outreach-agent", title: "Outreach Agent", tag: "Sales", desc: "Search any UK company and get a personalised cold email generated from live Companies House data." },
+  { key: "social", href: "https://social.ishsitotombe.co.uk", title: "Social Post Generator", tag: "Content", desc: "Tell it what you did today — get 3 ready-to-post captions formatted for Instagram, Facebook, LinkedIn or TikTok." },
+  { key: "compliance", href: "https://compliance.ishsitotombe.co.uk", title: "Compliance Checker", tag: "Legal", desc: "Instant audit of any UK website against GDPR, PECR, and consumer law. Results in under a minute." },
 ];
 
 function ContactForm() {
