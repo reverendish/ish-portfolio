@@ -358,7 +358,7 @@ function ContactForm() {
 }
 
 export default function Home() {
-  const typed = useTyping(['lead follow-ups.', 'late payment chasing.', 'customer onboarding.']);
+  const typed = useTyping(['outreach.', 'late payment chasing.', 'customer onboarding.', 'compliance checks.']);
   const [email, setEmail] = useState('');
   const [heroSubmitted, setHeroSubmitted] = useState(false);
   const [heroError, setHeroError] = useState('');
@@ -441,7 +441,7 @@ export default function Home() {
             </ClipReveal>
             <ClipReveal delay={60}>
               <span style={{ color: 'var(--accent)', display: 'block' }}>
-                {typed || ' '}
+                {typed || ' '}
                 <span style={{ borderRight: '3px solid var(--accent)', animation: 'blink 1s step-end infinite', marginLeft: '2px' }} />
               </span>
             </ClipReveal>
