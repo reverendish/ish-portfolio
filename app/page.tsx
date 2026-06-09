@@ -52,9 +52,9 @@ const DEMOS: Record<string, { lines: string[]; color: string }> = {
     color: "#6ee7b7",
     lines: ["Input: Jake Tokley, TikTok ads, Colchester...", "Generating personalised pitch...", "────────────────────────────", "Hey Jake, fellow Colchester person here.", "Saw your post about the TikTok ad work.", "I build scripts + briefs with AI —", "might save you a few hours a week.", "Worth a quick chat?"],
   },
-  social: {
+  latepayment: {
     color: "#f59e0b",
-    lines: ["Input: plumber, fitted boiler in Chelmsford...", "Generating 3 captions...", "────────────────────────────", "✅ Another boiler installation done in Essex.", "", "🔥 Nothing beats knowing a family's warm.", "", "❓ How old is your boiler?", "#PlumberLife #Essex #Chelmsford"],
+    lines: ["Input: Invoice #1042, £3,200, 47 days overdue...", "Tone: Firm Notice selected...", "────────────────────────────", "Subject: Second Notice — Invoice #1042 — £3,200", "", "This invoice remains unpaid despite our earlier", "reminder. Under the Late Payment of Commercial", "Debts (Interest) Act 1998, statutory interest", "at 8% above base rate may now apply.", "", "Please settle within 7 days."],
   },
   compliance: {
     color: "#a78bfa",
@@ -103,7 +103,7 @@ function ToolDemo({ toolKey }: { toolKey: string }) {
 
 const TOOLS = [
   { key: "outreach", href: "/tools/outreach-agent", title: "Outreach Agent", tag: "Sales", desc: "Search any UK company and get a personalised cold email generated from live Companies House data." },
-  { key: "social", href: "https://social.ishsitotombe.co.uk", title: "Social Post Generator", tag: "Content", desc: "Tell it what you did today — get 3 ready-to-post captions formatted for Instagram, Facebook, LinkedIn or TikTok." },
+  { key: "latepayment", href: "https://latepayment.ishsitotombe.co.uk", title: "Late Payment Chaser", tag: "Legal", desc: "Generate professional debt chasing letters citing UK statutory rights under the Late Payment of Commercial Debts (Interest) Act 1998. Three escalating tones: polite, firm, final." },
   { key: "compliance", href: "https://compliance.ishsitotombe.co.uk", title: "Compliance Checker", tag: "Legal", desc: "36-check UK compliance audit — GDPR, PECR, consumer law. Results in under a minute." },
 ];
 
@@ -144,7 +144,7 @@ function ContactForm() {
 }
 
 export default function Home() {
-  const typed = useTyping(["lead follow-ups.", "social posts.", "customer onboarding."]);
+  const typed = useTyping(["lead follow-ups.", "late payment chasing.", "customer onboarding."]);
   const [email, setEmail] = useState("");
   const [heroSubmitted, setHeroSubmitted] = useState(false);
   const [activeDemo, setActiveDemo] = useState("outreach");
