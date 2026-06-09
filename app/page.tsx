@@ -568,8 +568,8 @@ export default function Home() {
             <div className="demoGrid">
               {/* Left — browser mockup */}
               <BrowserFrame url={DEMOS[activeDemo].href}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '280px' }}>
-                  <div style={{ borderRight: '1px solid var(--border)', minWidth: 0, overflow: 'hidden' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '280px', alignItems: 'stretch' }}>
+                  <div style={{ borderRight: '1px solid var(--border)', minWidth: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                     {activeDemo === 'outreach'   && <OutreachUIMockup />}
                     {activeDemo === 'compliance' && <ComplianceUIMockup />}
                   </div>
