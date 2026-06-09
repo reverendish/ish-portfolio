@@ -34,9 +34,7 @@ export default function Nav() {
       <Link href="/" style={{ fontWeight: 700, fontSize: "1rem", letterSpacing: "-0.02em", color: "var(--text)", textDecoration: "none" }}>
         ish.
       </Link>
-      <div style={{ display: "flex", gap: "32px", alignItems: "center" }}>
-        <Link href="/#tools" style={{ fontSize: "0.875rem", color: "var(--muted)", textDecoration: "none" }}>Tools</Link>
-        <Link href="/#projects" style={{ fontSize: "0.875rem", color: "var(--muted)", textDecoration: "none" }}>Projects</Link>
+      <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
         <Link
           href="/#contact"
           style={{

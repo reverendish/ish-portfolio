@@ -95,23 +95,24 @@ const DEMOS: Record<string, {
   outreach: {
     color: '#a5b4fc',
     tabLabel: 'Outreach Agent',
-    tag: 'Sales · CRM',
+    tag: 'Sales · CRM · Companies House',
     title: 'Outreach Agent',
-    desc: 'Search any UK company via Companies House, enrich with officer data, and generate a personalised cold email in seconds. Includes a full CRM to track campaigns and contacts.',
+    desc: 'Search UK companies via Companies House, enrich with director data, generate personalised cold emails via Claude, then manage the full pipeline — contacts, campaigns, and follow-up sequences.',
     href: 'https://outreach.ishsitotombe.co.uk',
     scriptLines: [
-      { text: '> Searching: "Moonpig Group PLC"', dim: true },
-      { text: '→ Found: Moonpig Group PLC · 12345678', dim: true },
-      { text: '→ Director: Nick Marsden (CEO)', accent: true },
-      { text: '' },
-      { text: '> Generating email...', dim: true },
+      { text: '> estate agents in Colchester', dim: true },
+      { text: '→ 8 active companies found', accent: true },
+      { text: '→ Fetching directors...', dim: true },
+      { text: '→ Enriching: Ashton & Co Properties', dim: true },
+      { text: '→ Director: James Ashton', dim: true },
       { text: '────────────────────────', dim: true },
-      { text: 'Subject: AI at Moonpig', accent: true },
-      { text: '' },
-      { text: 'Hi Nick,', },
-      { text: 'Noticed Moonpig\'s been scaling', },
-      { text: 'personalisation. I build AI workflows', },
-      { text: 'for exactly that. Worth a quick call?', },
+      { text: '→ Generating email via Claude...', dim: true },
+      { text: 'Subject: Lettings admin at Ashton & Co', accent: true },
+      { text: '"Hi James, I noticed Ashton & Co has', },
+      { text: 'been expanding — I build automations', },
+      { text: 'for letting agents. Worth a chat?"', },
+      { text: '────────────────────────', dim: true },
+      { text: '→ Added to follow-up sequence', accent: true },
     ],
   },
   compliance: {
@@ -238,30 +239,69 @@ function ScriptedOutput({ lines, color, running, started }: {
 }
 
 function OutreachUIMockup() {
+  const stats = [
+    { label: 'Total', value: '47' },
+    { label: 'Enriched', value: '31' },
+    { label: 'Contacted', value: '18' },
+    { label: 'Replied', value: '6' },
+  ];
+  const queue = [
+    { name: 'James Ashton', company: 'Ashton & Co Properties', due: '2d overdue', starred: true },
+    { name: 'Sarah Chen', company: 'Brightwell Lettings', due: '1d overdue', starred: false },
+  ];
   return (
-    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    <div style={{ display: 'flex', height: '100%', minHeight: 200 }}>
+      {/* Sidebar */}
       <div style={{
-        display: 'flex', gap: '8px',
-        padding: '8px 12px',
-        background: 'var(--bg)',
-        border: '1px solid var(--border-2)',
-        borderRadius: '6px',
-        alignItems: 'center',
+        width: 90, flexShrink: 0,
+        borderRight: '1px solid var(--border)',
+        padding: '12px 8px',
+        display: 'flex', flexDirection: 'column', gap: 2,
+        background: 'var(--surface)',
       }}>
-        <span style={{ fontSize: '0.72rem', color: 'var(--muted)', flex: 1, fontFamily: 'var(--font-geist-mono)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Moonpig Group PLC</span>
-        <span style={{ fontSize: '0.68rem', background: 'var(--accent)', color: 'var(--accent-fg)', padding: '2px 8px', borderRadius: '4px', fontWeight: 600, flexShrink: 0 }}>Search</span>
+        {['Dashboard', 'Contacts', 'Campaigns', 'Sequences'].map((item, i) => (
+          <div key={item} style={{
+            fontSize: '0.62rem', padding: '5px 8px', borderRadius: 4,
+            color: i === 0 ? 'var(--accent)' : 'var(--muted)',
+            background: i === 0 ? 'var(--accent-dim)' : 'transparent',
+            fontWeight: i === 0 ? 600 : 400,
+          }}>{item}</div>
+        ))}
       </div>
-      {[
-        { label: 'Company', value: 'Moonpig Group' },
-        { label: 'No.', value: '12345678' },
-        { label: 'Status', value: 'Active' },
-        { label: 'Director', value: 'Nick Marsden' },
-      ].map(row => (
-        <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', padding: '4px 0', borderBottom: '1px solid var(--border)', gap: '8px' }}>
-          <span style={{ color: 'var(--muted)', flexShrink: 0 }}>{row.label}</span>
-          <span style={{ color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.value}</span>
+      {/* Main */}
+      <div style={{ flex: 1, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10, minWidth: 0 }}>
+        <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text)' }}>Dashboard</span>
+        {/* Stats */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 6 }}>
+          {stats.map(s => (
+            <div key={s.label} style={{
+              background: 'var(--bg)', border: '1px solid var(--border)',
+              borderRadius: 6, padding: '6px 8px', textAlign: 'center',
+            }}>
+              <div style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--accent)' }}>{s.value}</div>
+              <div style={{ fontSize: '0.55rem', color: 'var(--muted)', marginTop: 2 }}>{s.label}</div>
+            </div>
+          ))}
         </div>
-      ))}
+        {/* Follow-up queue */}
+        <div style={{ border: '1px solid var(--border)', borderRadius: 6, overflow: 'hidden' }}>
+          <div style={{ padding: '5px 10px', borderBottom: '1px solid var(--border)', fontSize: '0.62rem', fontWeight: 700, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 6 }}>
+            Follow-up queue
+            <span style={{ background: '#f59e0b', color: '#000', borderRadius: 3, padding: '0 5px', fontSize: '0.55rem', fontWeight: 700 }}>2</span>
+          </div>
+          {queue.map(q => (
+            <div key={q.name} style={{ padding: '6px 10px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <div style={{ fontSize: '0.65rem', fontWeight: 600, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                  {q.starred && <span style={{ color: '#f59e0b' }}>★</span>}{q.name}
+                </div>
+                <div style={{ fontSize: '0.58rem', color: 'var(--muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{q.company}</div>
+              </div>
+              <span style={{ fontSize: '0.58rem', color: '#f87171', flexShrink: 0, marginLeft: 6 }}>{q.due}</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
