@@ -52,17 +52,13 @@ const DEMOS: Record<string, { lines: string[]; color: string }> = {
     color: "#6ee7b7",
     lines: ["Input: Jake Tokley, TikTok ads, Colchester...", "Generating personalised pitch...", "────────────────────────────", "Hey Jake, fellow Colchester person here.", "Saw your post about the TikTok ad work.", "I build scripts + briefs with AI —", "might save you a few hours a week.", "Worth a quick chat?"],
   },
-  review: {
-    color: "#a78bfa",
-    lines: ["Input: Dave, boiler install, Chelmer Gas...", "Generating review request...", "────────────────────────────", "Hi Dave, great working with you!", "If you were happy with the boiler install,", "we'd really appreciate a Google review —", "takes 30 seconds and helps us a lot.", "[GOOGLE REVIEW LINK]  — Chelmer Gas"],
-  },
   social: {
     color: "#f59e0b",
     lines: ["Input: plumber, fitted boiler in Chelmsford...", "Generating 3 captions...", "────────────────────────────", "✅ Another boiler installation done in Essex.", "", "🔥 Nothing beats knowing a family's warm.", "", "❓ How old is your boiler?", "#PlumberLife #Essex #Chelmsford"],
   },
-  quote: {
-    color: "#60a5fa",
-    lines: ["Input: Sarah Mills, kitchen refit, £3,200...", "Generating quote...", "────────────────────────────", "QUOTE — ref #2026-047", "Client: Sarah Mills", "Work: Kitchen refit & tiling", "Total: £3,200 + VAT", "Valid: 7 July 2026 · 50% deposit on acceptance."],
+  compliance: {
+    color: "#a78bfa",
+    lines: ["Input: https://example-estate-agent.co.uk...", "Running 36 checks across 6 categories...", "────────────────────────────", "✗ Cookie consent banner missing (PECR)", "✗ ICO registration number not found", "✓ HTTPS / SSL", "✓ Privacy policy present", "Score: 62/100 · 3 critical issues"],
   },
 };
 
@@ -108,7 +104,7 @@ function ToolDemo({ toolKey }: { toolKey: string }) {
 const TOOLS = [
   { key: "outreach", href: "/tools/outreach-agent", title: "Outreach Agent", tag: "Sales", desc: "Search any UK company and get a personalised cold email generated from live Companies House data." },
   { key: "social", href: "https://social.ishsitotombe.co.uk", title: "Social Post Generator", tag: "Content", desc: "Tell it what you did today — get 3 ready-to-post captions formatted for Instagram, Facebook, LinkedIn or TikTok." },
-  { key: "compliance", href: "https://compliance.ishsitotombe.co.uk", title: "Compliance Checker", tag: "Legal", desc: "Instant audit of any UK website against GDPR, PECR, and consumer law. Results in under a minute." },
+  { key: "compliance", href: "https://compliance.ishsitotombe.co.uk", title: "Compliance Checker", tag: "Legal", desc: "36-check UK compliance audit — GDPR, PECR, consumer law. Results in under a minute." },
 ];
 
 function ContactForm() {
@@ -148,7 +144,7 @@ function ContactForm() {
 }
 
 export default function Home() {
-  const typed = useTyping(["review requests.", "lead follow-ups.", "quote generation.", "social posts.", "customer onboarding."]);
+  const typed = useTyping(["lead follow-ups.", "social posts.", "customer onboarding."]);
   const [email, setEmail] = useState("");
   const [heroSubmitted, setHeroSubmitted] = useState(false);
   const [activeDemo, setActiveDemo] = useState("outreach");
@@ -237,7 +233,7 @@ export default function Home() {
           </div>
         </FadeIn>
         <FadeIn delay={200}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px", marginTop: "40px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px", marginTop: "40px" }}>
             {TOOLS.map(t => (
               <Link key={t.key} href={t.href} style={{ display: "block", padding: "18px", background: "var(--surface)", border: `1px solid ${activeDemo === t.key ? "var(--accent)" : "var(--border)"}`, borderRadius: "10px", textDecoration: "none", transition: "border-color 0.2s" }}>
                 <div style={{ fontSize: "0.7rem", color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "6px" }}>{t.tag}</div>
