@@ -164,7 +164,6 @@ const DEMOS: Record<string, {
 };
 
 const TOOLS = [
-  { key: 'mcp',        href: 'https://github.com/reverendish/mcp-x-mac-seed' },
   { key: 'outreach',   href: 'https://outreach.ishsitotombe.co.uk' },
   { key: 'compliance', href: 'https://compliance.ishsitotombe.co.uk' },
 ];
@@ -233,10 +232,12 @@ function ScriptedOutput({ lines, color, running, started }: {
     <div style={{
       padding: '20px',
       fontFamily: 'var(--font-geist-mono)',
-      fontSize: '0.75rem',
+      fontSize: '0.72rem',
       lineHeight: 1.7,
       minHeight: '220px',
       color: 'var(--muted)',
+      minWidth: 0,
+      overflow: 'hidden',
     }}>
       {!started && (
         <span style={{ color: 'var(--faint)' }}>Click 'Run demo' to see it in action</span>
@@ -248,6 +249,8 @@ function ScriptedOutput({ lines, color, running, started }: {
             color: line.accent ? color : line.dim ? 'var(--faint)' : 'var(--muted)',
             animation: 'slideUp 0.2s ease forwards',
             minHeight: '1.2em',
+            overflowWrap: 'break-word',
+            wordBreak: 'break-word',
           }}
         >
           {line.text || ' '}
@@ -396,7 +399,7 @@ export default function Home() {
   const typed = useTyping(['lead follow-ups.', 'late payment chasing.', 'customer onboarding.']);
   const [email, setEmail] = useState('');
   const [heroSubmitted, setHeroSubmitted] = useState(false);
-  const [activeDemo, setActiveDemo] = useState('mcp');
+  const [activeDemo, setActiveDemo] = useState('outreach');
   const [demoRunning, setDemoRunning] = useState(false);
   const [demoStarted, setDemoStarted] = useState(false);
 
@@ -519,8 +522,7 @@ export default function Home() {
             <BrowserFrame url={DEMOS[activeDemo].href}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '300px' }}>
                 {/* UI mockup */}
-                <div style={{ borderRight: '1px solid var(--border)' }}>
-                  {activeDemo === 'mcp'        && <McpUIMockup />}
+                <div style={{ borderRight: '1px solid var(--border)', minWidth: 0, overflow: 'hidden' }}>
                   {activeDemo === 'outreach'   && <OutreachUIMockup />}
                   {activeDemo === 'compliance' && <ComplianceUIMockup />}
                 </div>
@@ -573,8 +575,6 @@ export default function Home() {
               </div>
               <a
                 href={DEMOS[activeDemo].href}
-                target={activeDemo === 'mcp' ? '_blank' : undefined}
-                rel={activeDemo === 'mcp' ? 'noopener' : undefined}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -592,7 +592,7 @@ export default function Home() {
                 onMouseEnter={e => (e.currentTarget.style.opacity = '0.88')}
                 onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
               >
-                {activeDemo === 'mcp' ? 'View on GitHub →' : 'Try the full tool →'}
+                Try the full tool →
               </a>
               <p style={{ fontSize: '0.78rem', color: 'var(--faint)' }}>
                 Want this for your business?{' '}
