@@ -25,7 +25,7 @@ export default function Nav() {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        background: scrolled ? "rgba(10,10,10,0.9)" : "transparent",
+        background: scrolled ? "var(--nav-bg)" : "transparent",
         backdropFilter: scrolled ? "blur(12px)" : "none",
         borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
         transition: "all 0.3s ease",
@@ -42,7 +42,7 @@ export default function Nav() {
           style={{
             fontSize: "0.875rem",
             fontWeight: 600,
-            color: "#000",
+            color: "var(--accent-fg)",
             background: "var(--accent)",
             padding: "8px 18px",
             borderRadius: "6px",

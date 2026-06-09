@@ -313,7 +313,7 @@ function OutreachUIMockup() {
         alignItems: 'center',
       }}>
         <span style={{ fontSize: '0.75rem', color: 'var(--muted)', flex: 1, fontFamily: 'var(--font-geist-mono)' }}>Moonpig Group PLC</span>
-        <span style={{ fontSize: '0.7rem', background: 'var(--accent)', color: '#09090b', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>Search</span>
+        <span style={{ fontSize: '0.7rem', background: 'var(--accent)', color: 'var(--accent-fg)', padding: '2px 8px', borderRadius: '4px', fontWeight: 600 }}>Search</span>
       </div>
       {[
         { label: 'Company', value: 'Moonpig Group PLC' },
@@ -387,7 +387,7 @@ function ContactForm() {
       </div>
       <input required type="email" placeholder="Email address" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} style={inputStyle} />
       <textarea required rows={4} placeholder="What's the one task that eats the most of your time each week?" value={form.problem} onChange={e => setForm(f => ({ ...f, problem: e.target.value }))} style={{ ...inputStyle, resize: 'vertical' }} />
-      <button type="submit" style={{ background: 'var(--accent)', color: '#000', fontWeight: 700, border: 'none', borderRadius: '8px', padding: '14px', fontSize: '1rem', cursor: 'pointer' }}>
+      <button type="submit" style={{ background: 'var(--accent)', color: 'var(--accent-fg)', fontWeight: 700, border: 'none', borderRadius: '8px', padding: '14px', fontSize: '1rem', cursor: 'pointer' }}>
         Send it over
       </button>
       <p style={{ fontSize: '0.8rem', color: 'var(--faint)', textAlign: 'center' }}>No spam. Just a reply from me.</p>
@@ -456,7 +456,7 @@ export default function Home() {
               ) : (
                 <form onSubmit={handleHeroSubmit} style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', maxWidth: '440px' }}>
                   <input type="email" required placeholder="your@email.com" value={email} onChange={e => setEmail(e.target.value)} style={{ flex: 1, minWidth: '200px', padding: '13px 16px', background: 'var(--surface)', border: '1px solid var(--border-2)', borderRadius: '8px', color: 'var(--text)', fontSize: '0.95rem', fontFamily: 'inherit', outline: 'none' }} />
-                  <button type="submit" style={{ background: 'var(--accent)', color: '#000', fontWeight: 700, border: 'none', borderRadius: '8px', padding: '13px 22px', fontSize: '0.95rem', cursor: 'pointer' }}>
+                  <button type="submit" style={{ background: 'var(--accent)', color: 'var(--accent-fg)', fontWeight: 700, border: 'none', borderRadius: '8px', padding: '13px 22px', fontSize: '0.95rem', cursor: 'pointer' }}>
                     Let's talk
                   </button>
                 </form>
@@ -541,7 +541,7 @@ export default function Home() {
                   disabled={demoRunning}
                   style={{
                     background: demoRunning ? 'transparent' : 'var(--accent)',
-                    color: demoRunning ? 'var(--muted)' : '#09090b',
+                    color: demoRunning ? 'var(--muted)' : 'var(--accent-fg)',
                     border: demoRunning ? '1px solid var(--border-2)' : 'none',
                     borderRadius: '6px',
                     padding: '7px 18px',
@@ -580,7 +580,7 @@ export default function Home() {
                   alignItems: 'center',
                   gap: '6px',
                   background: 'var(--accent)',
-                  color: '#09090b',
+                  color: 'var(--accent-fg)',
                   fontWeight: 700,
                   padding: '11px 22px',
                   borderRadius: '8px',

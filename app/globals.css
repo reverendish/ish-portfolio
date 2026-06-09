@@ -14,6 +14,8 @@
   --surface-2:    #27272a;
   --border:       #27272a;
   --border-2:     #3f3f46;
+  --nav-bg:       rgba(9, 9, 11, 0.88);
+  --accent-fg:    #09090b;
 }
 
 /* ─── LIGHT MODE ─── */
@@ -29,6 +31,8 @@
   --surface-2:    #e4e4e7;
   --border:       #e4e4e7;
   --border-2:     #d4d4d8;
+  --nav-bg:       rgba(250, 250, 250, 0.88);
+  --accent-fg:    #ffffff;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
