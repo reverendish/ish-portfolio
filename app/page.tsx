@@ -304,15 +304,18 @@ function ContactForm() {
     e.preventDefault();
     setError('');
     try {
-      const res = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      const res = await fetch('/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          'form-name': 'contact',
+          ...form,
+        }).toString(),
       });
       if (res.ok) setSubmitted(true);
-      else setError('Something went wrong — email me directly at ish@ishsitotombe.co.uk');
+      else setError('Something went wrong. Please try again.');
     } catch {
-      setError('Something went wrong — email me directly at ish@ishsitotombe.co.uk');
+      setError('Something went wrong. Please try again.');
     }
   };
 
@@ -332,13 +335,19 @@ function ContactForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxWidth: '520px', margin: '0 auto' }}>
+    <form
+      name="contact"
+      onSubmit={handleSubmit}
+      data-netlify="true"
+      style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxWidth: '520px', margin: '0 auto' }}
+    >
+      <input type="hidden" name="form-name" value="contact" />
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-        <input required aria-label="Your name" placeholder="Your name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} style={inputStyle} />
-        <input required aria-label="Business name" placeholder="Business name" value={form.business} onChange={e => setForm(f => ({ ...f, business: e.target.value }))} style={inputStyle} />
+        <input required name="name" aria-label="Your name" placeholder="Your name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} style={inputStyle} />
+        <input required name="business" aria-label="Business name" placeholder="Business name" value={form.business} onChange={e => setForm(f => ({ ...f, business: e.target.value }))} style={inputStyle} />
       </div>
-      <input required type="email" aria-label="Email address" placeholder="Email address" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} style={inputStyle} />
-      <textarea required rows={4} aria-label="Your biggest time sink" placeholder="What's the one task that eats the most of your time each week?" value={form.problem} onChange={e => setForm(f => ({ ...f, problem: e.target.value }))} style={{ ...inputStyle, resize: 'vertical' }} />
+      <input required type="email" name="email" aria-label="Email address" placeholder="Email address" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} style={inputStyle} />
+      <textarea required rows={4} name="problem" aria-label="Your biggest time sink" placeholder="What's the one task that eats the most of your time each week?" value={form.problem} onChange={e => setForm(f => ({ ...f, problem: e.target.value }))} style={{ ...inputStyle, resize: 'vertical' }} />
       {error && <p style={{ fontSize: '0.82rem', color: '#fca5a5' }}>{error}</p>}
       <button type="submit" style={{ background: 'var(--accent)', color: 'var(--accent-fg)', fontWeight: 700, border: 'none', borderRadius: '8px', padding: '14px', fontSize: '1rem', cursor: 'pointer' }}>
         Send it over
@@ -374,15 +383,15 @@ export default function Home() {
     e.preventDefault();
     setHeroError('');
     try {
-      const res = await fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      const res = await fetch('/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, source: 'hero' }),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ 'form-name': 'hero-email', email }).toString(),
       });
       if (res.ok) setHeroSubmitted(true);
-      else setHeroError('Try emailing me directly at ish@ishsitotombe.co.uk');
+      else setHeroError('Something went wrong. Please try again.');
     } catch {
-      setHeroError('Try emailing me directly at ish@ishsitotombe.co.uk');
+      setHeroError('Something went wrong. Please try again.');
     }
   };
 
@@ -452,10 +461,12 @@ export default function Home() {
               {heroSubmitted ? (
                 <p style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '1rem' }}>✓ I'll be in touch within 24 hours.</p>
               ) : (
-                <form onSubmit={handleHeroSubmit} style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', maxWidth: '440px' }}>
+                <form name="hero-email" onSubmit={handleHeroSubmit} data-netlify="true" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', maxWidth: '440px' }}>
+                  <input type="hidden" name="form-name" value="hero-email" />
                   <input
                     type="email"
                     required
+                    name="email"
                     aria-label="Your email address"
                     placeholder="your@email.com"
                     value={email}
