@@ -395,14 +395,10 @@ export default function Home() {
     }
   };
 
-  // Panel style — max-width container that blocks the dot grid
   const panel: React.CSSProperties = {
     maxWidth: '900px',
     margin: '0 auto',
     padding: '80px 32px',
-    background: 'var(--bg)',
-    position: 'relative',
-    zIndex: 1,
   };
 
   const labelStyle: React.CSSProperties = {
@@ -435,22 +431,18 @@ export default function Home() {
             Automation · AI · Colchester, UK
           </div>
 
-          <h1 style={{ fontSize: 'clamp(2.6rem, 7vw, 5rem)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.05, marginBottom: '24px' }}>
-            <ClipReveal>
-              <span>Stop doing</span>
-            </ClipReveal>
-            <ClipReveal delay={60}>
-              <span style={{ color: 'var(--accent)', display: 'block' }}>
-                {typed || ' '}
+          <FadeIn>
+            <h1 style={{ fontSize: 'clamp(2.6rem, 7vw, 5rem)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: '24px' }}>
+              Stop doing<br />
+              <span style={{ color: 'var(--accent)' }}>
+                {typed}
                 <span style={{ borderRight: '3px solid var(--accent)', animation: 'blink 1s step-end infinite', marginLeft: '2px' }} />
-              </span>
-            </ClipReveal>
-            <ClipReveal delay={120}>
-              <span>manually.</span>
-            </ClipReveal>
-          </h1>
+              </span><br />
+              manually.
+            </h1>
+          </FadeIn>
 
-          <FadeIn delay={300}>
+          <FadeIn delay={200}>
             <p style={{ fontSize: '1.1rem', color: 'var(--muted)', maxWidth: '480px', marginBottom: '40px', lineHeight: 1.75 }}>
               I build custom AI automations that take the repetitive parts of running your business off your plate — so you can focus on the work that actually makes you money.
             </p>
