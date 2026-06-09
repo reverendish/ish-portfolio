@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
@@ -51,6 +52,7 @@ export default function Nav() {
         >
           Get in touch
         </Link>
+        <ThemeToggle />
       </div>
     </nav>
   );
