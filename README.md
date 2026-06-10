@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ishsitotombe.co.uk
 
-## Getting Started
+Personal portfolio and tools hub for Ish Sitotombe — a freelance developer building AI-powered web tools for UK small businesses.
 
-First, run the development server:
+Live at **[ishsitotombe.co.uk](https://ishsitotombe.co.uk)**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## What it is
+
+A Next.js 15 site that serves as both a portfolio and a gateway to three live SaaS tools:
+
+- **Compliance Checker** (`compliance.ishsitotombe.co.uk`) — AI-powered website compliance audit against GDPR, UK Privacy Law, and accessibility standards. Backed by AWS Bedrock (Claude Sonnet).
+- **Outreach Agent** (`outreach.ishsitotombe.co.uk`) — AI cold outreach CRM with contact management, campaign sequences, and personalised email generation.
+- **Late Payment Chaser** — Automated email sequences for outstanding invoices.
+
+---
+
+## Stack
+
+| Layer | Tech |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript |
+| Styling | CSS custom properties (dark/light theme toggle), Tailwind utility classes |
+| Animation | Three.js r165 (wireframe hero), Framer Motion |
+| Deploy | Netlify (`@netlify/plugin-nextjs`) |
+| Forms | Netlify Forms |
+| Font | Geist Sans |
+
+---
+
+## Architecture
+
+```
+app/
+  layout.tsx        — Root layout: theme toggle, nav, contact modal provider, Netlify form stub
+  page.tsx          — Home: Three.js hero, demo previews, how-it-works
+  globals.css       — Design tokens (CSS vars), animations, grid helpers
+
+components/
+  Nav.tsx                 — Sticky nav with theme toggle + contact modal trigger
+  HeroCanvas.tsx          — Three.js WebGL wireframe scene (automation network)
+  ContactModal.tsx        — Global overlay contact form
+  ContactModalProvider.tsx — React Context provider — any component can call openModal()
+  ThemeToggle.tsx         — Dark/light toggle writing data-theme to <html>
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The contact modal uses React Context so `openModal()` is available anywhere without prop drilling. Netlify Forms detects it via a hidden static form in `layout.tsx` rendered at build time.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Local development
 
-## Learn More
+```bash
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploy
 
-## Deploy on Vercel
+Deployed automatically via Netlify on push to `main`. No manual build step required.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Environment variables: none required for the portfolio itself. Tool iframes load from their own subdomains.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Related repos
+
+- [`compliance-checker`](https://github.com/reverendish/compliance-checker) — SAM/Lambda + Next.js frontend
+- [`outreach-agent`](https://github.com/reverendish/outreach-agent) — Next.js CRM
+- [`late-payment-chaser`](https://github.com/reverendish/late-payment-chaser) — Next.js invoice chaser

@@ -1,0 +1,21 @@
+# Repomix exclusions — keep AI context lean and secure
+.git/
+.next/
+out/
+node_modules/
+.aws-sam/
+coverage/
+
+# Security — never include credentials or secrets
+*credentials*
+*.csv
+.env
+.env.*
+.env.local
+.env.*.local
+
+# Build / generated
+*.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

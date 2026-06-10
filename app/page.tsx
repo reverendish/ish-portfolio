@@ -1,7 +1,8 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
 import Nav from '@/components/Nav';
+import { useContactModal } from '@/components/ContactModalProvider';
+import HeroCanvas from '@/components/HeroCanvas';
 
 function useTyping(words: string[], speed = 80, pause = 1800) {
   const [display, setDisplay] = useState('');
@@ -335,68 +336,6 @@ function ComplianceUIMockup() {
   );
 }
 
-function ContactForm() {
-  const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', business: '', problem: '' });
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    try {
-      const res = await fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({
-          'form-name': 'contact',
-          ...form,
-        }).toString(),
-      });
-      if (res.ok) setSubmitted(true);
-      else setError('Something went wrong. Please try again.');
-    } catch {
-      setError('Something went wrong. Please try again.');
-    }
-  };
-
-  if (submitted) return (
-    <div style={{ textAlign: 'center', padding: '48px 0' }}>
-      <div style={{ fontSize: '2rem', marginBottom: '12px' }}>✓</div>
-      <h3 style={{ fontWeight: 600, marginBottom: '8px' }}>Got it — I'll reply within 24 hours.</h3>
-      <p style={{ color: 'var(--muted)' }}>Check your inbox.</p>
-    </div>
-  );
-
-  const inputStyle: React.CSSProperties = {
-    width: '100%', padding: '13px 16px',
-    background: 'var(--surface)', border: '1px solid var(--border-2)',
-    borderRadius: '8px', color: 'var(--text)', fontSize: '0.95rem',
-    fontFamily: 'inherit', outline: 'none',
-  };
-
-  return (
-    <form
-      name="contact"
-      onSubmit={handleSubmit}
-      data-netlify="true"
-      style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxWidth: '520px', margin: '0 auto' }}
-    >
-      <input type="hidden" name="form-name" value="contact" />
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-        <input required name="name" aria-label="Your name" placeholder="Your name" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} style={inputStyle} />
-        <input required name="business" aria-label="Business name" placeholder="Business name" value={form.business} onChange={e => setForm(f => ({ ...f, business: e.target.value }))} style={inputStyle} />
-      </div>
-      <input required type="email" name="email" aria-label="Email address" placeholder="Email address" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} style={inputStyle} />
-      <textarea required rows={4} name="problem" aria-label="Your biggest time sink" placeholder="What's the one task that eats the most of your time each week?" value={form.problem} onChange={e => setForm(f => ({ ...f, problem: e.target.value }))} style={{ ...inputStyle, resize: 'vertical' }} />
-      {error && <p style={{ fontSize: '0.82rem', color: '#fca5a5' }}>{error}</p>}
-      <button type="submit" style={{ background: 'var(--accent)', color: 'var(--accent-fg)', fontWeight: 700, border: 'none', borderRadius: '8px', padding: '14px', fontSize: '1rem', cursor: 'pointer' }}>
-        Send it over
-      </button>
-      <p style={{ fontSize: '0.8rem', color: 'var(--faint)', textAlign: 'center' }}>No spam. Just a reply from me.</p>
-    </form>
-  );
-}
-
 export default function Home() {
   const typed = useTyping(['outreach.', 'late payment chasing.', 'customer onboarding.', 'compliance checks.']);
   const [email, setEmail] = useState('');
@@ -405,6 +344,7 @@ export default function Home() {
   const [activeDemo, setActiveDemo] = useState('outreach');
   const [demoRunning, setDemoRunning] = useState(false);
   const [demoStarted, setDemoStarted] = useState(false);
+  const { openModal } = useContactModal();
 
   const runDemo = () => {
     if (demoRunning) return;
@@ -464,9 +404,19 @@ export default function Home() {
       <Nav />
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      {/* Hero is transparent — dot grid shows across full viewport */}
-      <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', padding: '100px 32px 80px', position: 'relative', zIndex: 1 }}>
-        <div style={{ maxWidth: '900px', margin: '0 auto', width: '100%' }}>
+      <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', padding: '100px 32px 80px', position: 'relative', zIndex: 1, overflow: 'hidden' }}>
+        {/* 3D wireframe canvas — sits behind all hero content */}
+        <HeroCanvas />
+
+        {/* Bottom fade — blends canvas into next section */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0,
+          height: '180px', zIndex: 1, pointerEvents: 'none',
+          background: 'linear-gradient(to bottom, transparent, var(--bg))',
+        }} />
+
+        {/* data-theme forces dark vars here regardless of site theme toggle */}
+        <div data-theme="dark" style={{ maxWidth: '900px', margin: '0 auto', width: '100%', position: 'relative', zIndex: 2 }}>
           <div style={{ display: 'inline-block', background: 'var(--accent-dim)', border: '1px solid rgba(165,180,252,0.3)', color: 'var(--accent)', fontSize: '0.72rem', padding: '5px 14px', borderRadius: '100px', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '32px', fontWeight: 500 }}>
             Automation · AI · Colchester, UK
           </div>
@@ -519,7 +469,7 @@ export default function Home() {
 
       {/* ── TOOLS / DEMOS ────────────────────────────────── */}
       <section id="tools">
-        <div style={panel}>
+        <div style={{ ...panel, maxWidth: '1100px' }}>
           <FadeIn>
             <span style={labelStyle}>What I build</span>
             <ClipReveal>
@@ -630,7 +580,7 @@ export default function Home() {
                 </a>
                 <p style={{ fontSize: '0.78rem', color: 'var(--faint)' }}>
                   Want this for your business?{' '}
-                  <Link href="/#contact" style={{ color: 'var(--accent)', textDecoration: 'none' }}>Get in touch</Link>
+                  <button onClick={openModal} style={{ background: 'none', border: 'none', padding: 0, color: 'var(--accent)', fontSize: '0.78rem', cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline', textUnderlineOffset: '3px' }}>Get in touch</button>
                 </p>
               </div>
             </div>
@@ -680,7 +630,7 @@ export default function Home() {
             </ClipReveal>
             <div className="howItWorksGrid">
               {[
-                { n: '01', title: 'Tell me what\'s eating your time', body: 'Fill in the form below. I\'ll reply within 24 hours with a quick call to understand the problem.' },
+                { n: '01', title: 'Tell me what\'s eating your time', body: 'Click \'Get in touch\' — takes 2 minutes. I\'ll reply within 24 hours with a quick call to understand the problem.' },
                 { n: '02', title: 'I build the automation', body: 'Most small automations take a few days. I use AI to build fast, which keeps the cost low.' },
                 { n: '03', title: 'You get your time back', body: 'The system runs in the background. Pay once — no monthly fees unless it makes sense.' },
               ].map((step, i) => (
@@ -693,20 +643,6 @@ export default function Home() {
                 </FadeIn>
               ))}
             </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* ── CONTACT ──────────────────────────────────────── */}
-      <section id="contact">
-        <div style={{ ...panel, paddingBottom: '120px' }}>
-          <FadeIn>
-            <span style={{ ...labelStyle, textAlign: 'center', display: 'block' }}>Get in touch</span>
-            <ClipReveal>
-              <h2 style={{ ...sectionH2, textAlign: 'center', marginBottom: '8px' }}>What's slowing you down?</h2>
-            </ClipReveal>
-            <p style={{ color: 'var(--muted)', textAlign: 'center', marginBottom: '48px', marginTop: '8px' }}>Takes 2 minutes. I'll reply within 24 hours.</p>
-            <ContactForm />
           </FadeIn>
         </div>
       </section>

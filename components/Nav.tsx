@@ -2,9 +2,11 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import ThemeToggle from "./ThemeToggle";
+import { useContactModal } from "./ContactModalProvider";
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const { openModal } = useContactModal();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -35,8 +37,8 @@ export default function Nav() {
         ish.
       </Link>
       <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-        <Link
-          href="/#contact"
+        <button
+          onClick={openModal}
           style={{
             fontSize: "0.875rem",
             fontWeight: 600,
@@ -44,12 +46,16 @@ export default function Nav() {
             background: "var(--accent)",
             padding: "8px 18px",
             borderRadius: "6px",
-            textDecoration: "none",
+            border: "none",
+            cursor: "pointer",
             transition: "opacity 0.15s",
+            fontFamily: "inherit",
           }}
+          onMouseEnter={e => (e.currentTarget.style.opacity = "0.85")}
+          onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
         >
           Get in touch
-        </Link>
+        </button>
         <ThemeToggle />
       </div>
     </nav>
