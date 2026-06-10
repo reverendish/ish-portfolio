@@ -3,7 +3,9 @@ import { useState, useEffect, useRef } from 'react';
 import Nav from '@/components/Nav';
 import { useContactModal } from '@/components/ContactModalProvider';
 import HeroCanvas from '@/components/HeroCanvas';
+import OutreachDemoForm from '@/components/OutreachDemoForm';
 
+// ── useTyping ─────────────────────────────────────────────────────────────────
 function useTyping(words: string[], speed = 80, pause = 1800) {
   const [display, setDisplay] = useState('');
   const [wordIdx, setWordIdx] = useState(0);
@@ -33,6 +35,7 @@ function useTyping(words: string[], speed = 80, pause = 1800) {
   return display;
 }
 
+// ── Animation wrappers ────────────────────────────────────────────────────────
 function FadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -84,44 +87,33 @@ function ClipReveal({ children, delay = 0 }: { children: React.ReactNode; delay?
   );
 }
 
+// ── Demo data ─────────────────────────────────────────────────────────────────
 const DEMOS: Record<string, {
+  type: 'interactive' | 'scripted';
   color: string;
   tabLabel: string;
   tag: string;
   title: string;
   desc: string;
   href: string;
-  scriptLines: { text: string; dim?: boolean; accent?: boolean }[];
+  scriptLines?: { text: string; dim?: boolean; accent?: boolean }[];
 }> = {
   outreach: {
+    type: 'interactive',
     color: '#a5b4fc',
     tabLabel: 'Outreach Agent',
     tag: 'Sales · CRM · Companies House',
     title: 'Outreach Agent',
-    desc: 'Search UK companies via Companies House, enrich with director data, generate personalised cold emails via Claude, then manage the full pipeline — contacts, campaigns, and follow-up sequences.',
+    desc: 'Search UK companies via Companies House, enrich with director data, generate personalised cold emails — then manage the full pipeline. Give it your details and see a real email land in your inbox.',
     href: 'https://outreach.ishsitotombe.co.uk',
-    scriptLines: [
-      { text: '> estate agents in Colchester', dim: true },
-      { text: '→ 8 active companies found', accent: true },
-      { text: '→ Fetching directors...', dim: true },
-      { text: '→ Enriching: Ashton & Co Properties', dim: true },
-      { text: '→ Director: James Ashton', dim: true },
-      { text: '────────────────────────', dim: true },
-      { text: '→ Generating email via Claude...', dim: true },
-      { text: 'Subject: Lettings admin at Ashton & Co', accent: true },
-      { text: '"Hi James, I noticed Ashton & Co has', },
-      { text: 'been expanding — I build automations', },
-      { text: 'for letting agents. Worth a chat?"', },
-      { text: '────────────────────────', dim: true },
-      { text: '→ Added to follow-up sequence', accent: true },
-    ],
   },
   compliance: {
+    type: 'scripted',
     color: '#a5b4fc',
     tabLabel: 'Compliance Checker',
-    tag: 'Legal · GDPR · PECR',
-    title: 'Compliance Checker',
-    desc: 'Instant UK compliance audit — GDPR, PECR, Companies Act, WCAG, and up to 260 sector-specific checks. Identifies critical issues with citations in under a minute.',
+    tag: 'Free · GDPR · PECR',
+    title: 'UK Compliance Checker',
+    desc: 'Free forever. Instant UK compliance audit — GDPR, PECR, Companies Act, WCAG, and up to 260 sector-specific checks. Identifies critical issues with law citations in under a minute. I absorb the AWS costs so you don\'t have to.',
     href: 'https://compliance.ishsitotombe.co.uk',
     scriptLines: [
       { text: '> example-estate-agent.co.uk', dim: true },
@@ -144,6 +136,57 @@ const TOOLS = [
   { key: 'compliance', href: 'https://compliance.ishsitotombe.co.uk' },
 ];
 
+// ── ScriptedOutput ────────────────────────────────────────────────────────────
+function ScriptedOutput({ lines, color, running, started }: {
+  lines: { text: string; dim?: boolean; accent?: boolean }[];
+  color: string;
+  running: boolean;
+  started: boolean;
+}) {
+  const [shownCount, setShownCount] = useState(0);
+
+  useEffect(() => {
+    if (!running) return;
+    setShownCount(0);
+    const timers = lines.map((_, i) =>
+      setTimeout(() => setShownCount(i + 1), i * 140 + 50)
+    );
+    return () => timers.forEach(clearTimeout);
+  }, [running, lines]);
+
+  return (
+    <div style={{
+      padding: '20px',
+      fontFamily: 'var(--font-geist-mono)',
+      fontSize: '0.75rem',
+      lineHeight: 1.75,
+      height: '280px',
+      overflowY: 'auto',
+      color: 'var(--muted)',
+    }}>
+      {!started && (
+        <span style={{ color: 'var(--faint)' }}>Click &apos;Run demo&apos; to see it in action</span>
+      )}
+      {lines.slice(0, shownCount).map((line, i) => (
+        <div
+          key={i}
+          style={{
+            color: line.accent ? color : line.dim ? 'var(--faint)' : 'var(--muted)',
+            animation: 'slideUp 0.2s ease forwards',
+            minHeight: '1.2em',
+          }}
+        >
+          {line.text || ' '}
+        </div>
+      ))}
+      {running && shownCount < lines.length && (
+        <span style={{ color, animation: 'blink 1s step-end infinite' }}>▋</span>
+      )}
+    </div>
+  );
+}
+
+// ── BrowserFrame ──────────────────────────────────────────────────────────────
 function BrowserFrame({ url, children }: { url: string; children: React.ReactNode }) {
   return (
     <div style={{
@@ -153,6 +196,7 @@ function BrowserFrame({ url, children }: { url: string; children: React.ReactNod
       overflow: 'hidden',
       boxShadow: '0 24px 64px rgba(0,0,0,0.3)',
     }}>
+      {/* Titlebar */}
       <div style={{
         padding: '10px 16px',
         borderBottom: '1px solid var(--border)',
@@ -175,7 +219,6 @@ function BrowserFrame({ url, children }: { url: string; children: React.ReactNod
           fontSize: '0.72rem',
           color: 'var(--muted)',
           fontFamily: 'var(--font-geist-mono)',
-          letterSpacing: '0.02em',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
@@ -188,154 +231,7 @@ function BrowserFrame({ url, children }: { url: string; children: React.ReactNod
   );
 }
 
-function ScriptedOutput({ lines, color, running, started }: {
-  lines: { text: string; dim?: boolean; accent?: boolean }[];
-  color: string;
-  running: boolean;
-  started: boolean;
-}) {
-  const [shownCount, setShownCount] = useState(0);
-
-  useEffect(() => {
-    if (!running) return;
-    setShownCount(0);
-    const timers = lines.map((_, i) =>
-      setTimeout(() => setShownCount(i + 1), i * 140 + 50)
-    );
-    return () => timers.forEach(clearTimeout);
-  }, [running, lines]);
-
-  return (
-    <div style={{
-      padding: '20px',
-      fontFamily: 'var(--font-geist-mono)',
-      fontSize: '0.72rem',
-      lineHeight: 1.7,
-      minHeight: '220px',
-      color: 'var(--muted)',
-      minWidth: 0,
-      overflow: 'hidden',
-    }}>
-      {!started && (
-        <span style={{ color: 'var(--faint)' }}>Click 'Run demo' to see it in action</span>
-      )}
-      {lines.slice(0, shownCount).map((line, i) => (
-        <div
-          key={i}
-          style={{
-            color: line.accent ? color : line.dim ? 'var(--faint)' : 'var(--muted)',
-            animation: 'slideUp 0.2s ease forwards',
-            minHeight: '1.2em',
-            overflowWrap: 'break-word',
-          }}
-        >
-          {line.text || ' '}
-        </div>
-      ))}
-      {running && shownCount < lines.length && (
-        <span style={{ color, animation: 'blink 1s step-end infinite' }}>▋</span>
-      )}
-    </div>
-  );
-}
-
-function OutreachUIMockup() {
-  const stats = [
-    { label: 'Total', value: '47' },
-    { label: 'Enriched', value: '31' },
-    { label: 'Contacted', value: '18' },
-    { label: 'Replied', value: '6' },
-  ];
-  const queue = [
-    { name: 'James Ashton', company: 'Ashton & Co Properties', due: '2d overdue', starred: true },
-    { name: 'Sarah Chen', company: 'Brightwell Lettings', due: '1d overdue', starred: false },
-  ];
-  return (
-    <div style={{ display: 'flex', height: '100%', minHeight: 200 }}>
-      {/* Sidebar */}
-      <div style={{
-        width: 90, flexShrink: 0,
-        borderRight: '1px solid var(--border)',
-        padding: '12px 8px',
-        display: 'flex', flexDirection: 'column', gap: 2,
-        background: 'var(--surface)',
-      }}>
-        {['Dashboard', 'Contacts', 'Campaigns', 'Sequences'].map((item, i) => (
-          <div key={item} style={{
-            fontSize: '0.62rem', padding: '5px 8px', borderRadius: 4,
-            color: i === 0 ? 'var(--accent)' : 'var(--muted)',
-            background: i === 0 ? 'var(--accent-dim)' : 'transparent',
-            fontWeight: i === 0 ? 600 : 400,
-          }}>{item}</div>
-        ))}
-      </div>
-      {/* Main */}
-      <div style={{ flex: 1, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10, minWidth: 0 }}>
-        <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text)' }}>Dashboard</span>
-        {/* Stats */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 6 }}>
-          {stats.map(s => (
-            <div key={s.label} style={{
-              background: 'var(--bg)', border: '1px solid var(--border)',
-              borderRadius: 6, padding: '6px 8px', textAlign: 'center',
-            }}>
-              <div style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--accent)' }}>{s.value}</div>
-              <div style={{ fontSize: '0.55rem', color: 'var(--muted)', marginTop: 2 }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-        {/* Follow-up queue */}
-        <div style={{ border: '1px solid var(--border)', borderRadius: 6, overflow: 'hidden' }}>
-          <div style={{ padding: '5px 10px', borderBottom: '1px solid var(--border)', fontSize: '0.62rem', fontWeight: 700, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 6 }}>
-            Follow-up queue
-            <span style={{ background: '#f59e0b', color: '#000', borderRadius: 3, padding: '0 5px', fontSize: '0.55rem', fontWeight: 700 }}>2</span>
-          </div>
-          {queue.map(q => (
-            <div key={q.name} style={{ padding: '6px 10px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <div style={{ fontSize: '0.65rem', fontWeight: 600, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 4 }}>
-                  {q.starred && <span style={{ color: '#f59e0b' }}>★</span>}{q.name}
-                </div>
-                <div style={{ fontSize: '0.58rem', color: 'var(--muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{q.company}</div>
-              </div>
-              <span style={{ fontSize: '0.58rem', color: '#f87171', flexShrink: 0, marginLeft: 6 }}>{q.due}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ComplianceUIMockup() {
-  const checks = [
-    { label: 'Cookie consent', pass: false },
-    { label: 'HTTPS / SSL', pass: true },
-    { label: 'Privacy policy', pass: true },
-    { label: 'ICO number', pass: false },
-    { label: 'Ombudsman', pass: false },
-  ];
-  return (
-    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
-        <span style={{ fontSize: '0.68rem', color: 'var(--muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1, marginRight: '8px' }}>estate-agent.co.uk</span>
-        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--accent)', flexShrink: 0 }}>58/100</span>
-      </div>
-      <div style={{ height: '4px', background: 'var(--border)', borderRadius: '2px', marginBottom: '8px' }}>
-        <div style={{ width: '58%', height: '100%', background: 'var(--accent)', borderRadius: '2px' }} />
-      </div>
-      {checks.map(c => (
-        <div key={c.label} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.72rem' }}>
-          <span style={{ color: c.pass ? '#86efac' : '#fca5a5', fontFamily: 'var(--font-geist-mono)', fontSize: '0.68rem', flexShrink: 0 }}>
-            {c.pass ? '✓' : '✗'}
-          </span>
-          <span style={{ color: c.pass ? 'var(--muted)' : 'var(--text)' }}>{c.label}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
+// ── Home ──────────────────────────────────────────────────────────────────────
 export default function Home() {
   const typed = useTyping(['outreach.', 'late payment chasing.', 'customer onboarding.', 'compliance checks.']);
   const [email, setEmail] = useState('');
@@ -350,8 +246,8 @@ export default function Home() {
     if (demoRunning) return;
     setDemoStarted(true);
     setDemoRunning(true);
-    const demo = DEMOS[activeDemo];
-    setTimeout(() => setDemoRunning(false), demo.scriptLines.length * 140 + 300);
+    const lines = DEMOS[activeDemo].scriptLines || [];
+    setTimeout(() => setDemoRunning(false), lines.length * 140 + 300);
   };
 
   useEffect(() => {
@@ -399,23 +295,18 @@ export default function Home() {
     marginBottom: '12px',
   };
 
+  const demo = DEMOS[activeDemo];
+  const isScripted = demo.type === 'scripted';
+
   return (
     <>
       <Nav />
 
-      {/* ── HERO ─────────────────────────────────────────── */}
+      {/* ── HERO ────────────────────────────────────────── */}
       <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', padding: '100px 32px 80px', position: 'relative', zIndex: 1, overflow: 'hidden' }}>
-        {/* 3D wireframe canvas — sits behind all hero content */}
         <HeroCanvas />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '180px', zIndex: 1, pointerEvents: 'none', background: 'linear-gradient(to bottom, transparent, var(--bg))' }} />
 
-        {/* Bottom fade — blends canvas into next section */}
-        <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0,
-          height: '180px', zIndex: 1, pointerEvents: 'none',
-          background: 'linear-gradient(to bottom, transparent, var(--bg))',
-        }} />
-
-        {/* data-theme forces dark vars here regardless of site theme toggle */}
         <div data-theme="dark" style={{ maxWidth: '900px', margin: '0 auto', width: '100%', position: 'relative', zIndex: 2 }}>
           <div style={{ display: 'inline-block', background: 'var(--accent-dim)', border: '1px solid rgba(165,180,252,0.3)', color: 'var(--accent)', fontSize: '0.72rem', padding: '5px 14px', borderRadius: '100px', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '32px', fontWeight: 500 }}>
             Automation · AI · Colchester, UK
@@ -441,22 +332,17 @@ export default function Home() {
           <FadeIn delay={400}>
             <>
               {heroSubmitted ? (
-                <p style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '1rem' }}>✓ I'll be in touch within 24 hours.</p>
+                <p style={{ color: 'var(--accent)', fontWeight: 600, fontSize: '1rem' }}>✓ I&apos;ll be in touch within 24 hours.</p>
               ) : (
                 <form name="hero-email" onSubmit={handleHeroSubmit} data-netlify="true" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', maxWidth: '440px' }}>
                   <input type="hidden" name="form-name" value="hero-email" />
                   <input
-                    type="email"
-                    required
-                    name="email"
-                    aria-label="Your email address"
-                    placeholder="your@email.com"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
+                    type="email" required name="email" aria-label="Your email address"
+                    placeholder="your@email.com" value={email} onChange={e => setEmail(e.target.value)}
                     style={{ flex: 1, minWidth: '180px', padding: '13px 16px', background: 'var(--surface)', border: '1px solid var(--border-2)', borderRadius: '8px', color: 'var(--text)', fontSize: '0.95rem', fontFamily: 'inherit', outline: 'none' }}
                   />
                   <button type="submit" style={{ background: 'var(--accent)', color: 'var(--accent-fg)', fontWeight: 700, border: 'none', borderRadius: '8px', padding: '13px 22px', fontSize: '0.95rem', cursor: 'pointer' }}>
-                    Let's talk
+                    Let&apos;s talk
                   </button>
                 </form>
               )}
@@ -467,7 +353,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── TOOLS / DEMOS ────────────────────────────────── */}
+      {/* ── TOOLS / DEMOS ───────────────────────────────── */}
       <section id="tools">
         <div style={{ ...panel, maxWidth: '1100px' }}>
           <FadeIn>
@@ -477,7 +363,7 @@ export default function Home() {
             </ClipReveal>
             <FadeIn delay={100}>
               <p style={{ color: 'var(--muted)', marginBottom: '40px', maxWidth: '460px', lineHeight: 1.7 }}>
-                Scripted walkthroughs of real tools. Every one is customisable for your business.
+                Real tools, running live. The outreach demo sends an actual email to your inbox.
               </p>
             </FadeIn>
           </FadeIn>
@@ -486,27 +372,23 @@ export default function Home() {
           <FadeIn delay={120}>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '32px' }}>
               {TOOLS.map(t => {
-                const demo = DEMOS[t.key];
+                const d = DEMOS[t.key];
                 const isActive = activeDemo === t.key;
                 return (
                   <button
                     key={t.key}
                     onClick={() => setActiveDemo(t.key)}
                     style={{
-                      padding: '8px 20px',
-                      borderRadius: '100px',
-                      border: '1px solid',
+                      padding: '8px 20px', borderRadius: '100px', border: '1px solid',
                       borderColor: isActive ? 'var(--accent)' : 'var(--border-2)',
                       background: isActive ? 'var(--accent-dim)' : 'transparent',
                       color: isActive ? 'var(--accent)' : 'var(--muted)',
-                      fontSize: '0.85rem',
-                      fontWeight: isActive ? 600 : 400,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s cubic-bezier(0.16,1,0.3,1)',
+                      fontSize: '0.85rem', fontWeight: isActive ? 600 : 400,
+                      cursor: 'pointer', transition: 'all 0.2s cubic-bezier(0.16,1,0.3,1)',
                       fontFamily: 'var(--font-geist-sans)',
                     }}
                   >
-                    {demo.tabLabel}
+                    {d.tabLabel}
                   </button>
                 );
               })}
@@ -517,35 +399,40 @@ export default function Home() {
           <FadeIn delay={160}>
             <div className="demoGrid">
               {/* Left — browser mockup */}
-              <BrowserFrame url={DEMOS[activeDemo].href}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', minHeight: '280px', alignItems: 'stretch' }}>
-                  <div style={{ borderRight: '1px solid var(--border)', minWidth: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                    {activeDemo === 'outreach'   && <OutreachUIMockup />}
-                    {activeDemo === 'compliance' && <ComplianceUIMockup />}
+              <BrowserFrame url={demo.href}>
+                {/* Content area — fixed height, no internal grid */}
+                <div style={{ minHeight: '280px' }}>
+                  {demo.type === 'interactive' ? (
+                    <OutreachDemoForm accentColor={demo.color} />
+                  ) : (
+                    <ScriptedOutput
+                      lines={demo.scriptLines!}
+                      color={demo.color}
+                      running={demoRunning}
+                      started={demoStarted}
+                    />
+                  )}
+                </div>
+
+                {/* Footer bar — only show Run demo for scripted tabs */}
+                {isScripted && (
+                  <div style={{ padding: '12px 20px', borderTop: '1px solid var(--border)', background: 'var(--surface-2)' }}>
+                    <button
+                      onClick={runDemo}
+                      disabled={demoRunning}
+                      style={{
+                        background: demoRunning ? 'transparent' : 'var(--accent)',
+                        color: demoRunning ? 'var(--muted)' : 'var(--accent-fg)',
+                        border: demoRunning ? '1px solid var(--border-2)' : 'none',
+                        borderRadius: '6px', padding: '7px 18px', fontSize: '0.8rem',
+                        fontWeight: 600, cursor: demoRunning ? 'default' : 'pointer',
+                        transition: 'all 0.2s', fontFamily: 'var(--font-geist-sans)',
+                      }}
+                    >
+                      {demoRunning ? 'Running...' : demoStarted ? 'Run again' : 'Run demo'}
+                    </button>
                   </div>
-                  <ScriptedOutput
-                    lines={DEMOS[activeDemo].scriptLines}
-                    color={DEMOS[activeDemo].color}
-                    running={demoRunning}
-                    started={demoStarted}
-                  />
-                </div>
-                <div style={{ padding: '12px 20px', borderTop: '1px solid var(--border)', background: 'var(--surface-2)' }}>
-                  <button
-                    onClick={runDemo}
-                    disabled={demoRunning}
-                    style={{
-                      background: demoRunning ? 'transparent' : 'var(--accent)',
-                      color: demoRunning ? 'var(--muted)' : 'var(--accent-fg)',
-                      border: demoRunning ? '1px solid var(--border-2)' : 'none',
-                      borderRadius: '6px', padding: '7px 18px', fontSize: '0.8rem',
-                      fontWeight: 600, cursor: demoRunning ? 'default' : 'pointer',
-                      transition: 'all 0.2s', fontFamily: 'var(--font-geist-sans)',
-                    }}
-                  >
-                    {demoRunning ? 'Running...' : demoStarted ? 'Run again' : 'Run demo'}
-                  </button>
-                </div>
+                )}
               </BrowserFrame>
 
               {/* Right — description */}
@@ -555,17 +442,17 @@ export default function Home() {
               >
                 <div>
                   <div style={{ fontSize: '0.72rem', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '10px', fontWeight: 500 }}>
-                    {DEMOS[activeDemo].tag}
+                    {demo.tag}
                   </div>
                   <h3 style={{ fontSize: 'clamp(1.3rem, 2.2vw, 1.7rem)', fontWeight: 700, letterSpacing: '-0.03em', marginBottom: '12px', lineHeight: 1.2 }}>
-                    {DEMOS[activeDemo].title}
+                    {demo.title}
                   </h3>
                   <p style={{ color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.75 }}>
-                    {DEMOS[activeDemo].desc}
+                    {demo.desc}
                   </p>
                 </div>
                 <a
-                  href={DEMOS[activeDemo].href}
+                  href={demo.href}
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: '6px',
                     background: 'var(--accent)', color: 'var(--accent-fg)',
@@ -576,7 +463,7 @@ export default function Home() {
                   onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
                   onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
                 >
-                  Try the full tool →
+                  {demo.type === 'interactive' ? 'Try the full tool →' : 'Use the free tool →'}
                 </a>
                 <p style={{ fontSize: '0.78rem', color: 'var(--faint)' }}>
                   Want this for your business?{' '}
@@ -588,7 +475,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── PROJECTS ─────────────────────────────────────── */}
+      {/* ── PROJECTS ──────────────────────────────────────── */}
       <section id="projects">
         <div style={panel}>
           <FadeIn>
@@ -643,6 +530,35 @@ export default function Home() {
                 </FadeIn>
               ))}
             </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* ── WHAT'S NEXT ───────────────────────────────────── */}
+      <section>
+        <div style={panel}>
+          <FadeIn>
+            <span style={labelStyle}>What&apos;s next</span>
+            <ClipReveal>
+              <h2 style={{ ...sectionH2, marginBottom: '20px' }}>Building the next thing.</h2>
+            </ClipReveal>
+            <p style={{ color: 'var(--muted)', maxWidth: '520px', lineHeight: 1.75, marginBottom: '32px', fontSize: '0.95rem' }}>
+              I&apos;m doing market research right now — talking to businesses about what&apos;s actually eating their time. The compliance checker and outreach agent were built to solve problems I could see. The next one will be built around a problem you tell me about.
+            </p>
+            <button
+              onClick={openModal}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '8px',
+                background: 'var(--surface)', border: '1px solid var(--border-2)',
+                color: 'var(--text)', fontWeight: 600, padding: '12px 24px',
+                borderRadius: '8px', fontSize: '0.9rem', cursor: 'pointer',
+                fontFamily: 'inherit', transition: 'border-color 0.2s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = 'var(--accent)')}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border-2)')}
+            >
+              Tell me your problem →
+            </button>
           </FadeIn>
         </div>
       </section>
