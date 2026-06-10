@@ -99,7 +99,7 @@ export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
       <div style={{ padding: '24px 20px', fontFamily: 'var(--font-geist-mono)', fontSize: '0.75rem', color: 'var(--muted)', minHeight: '240px' }}>
         <div style={{ color: accentColor, marginBottom: '12px' }}>→ Generating your email{dots}</div>
         <div style={{ color: 'var(--faint)' }}>→ Calling Claude via Bedrock</div>
-        <div style={{ marginTop: '8px', color: 'var(--faint)' }}>→ Sending via Resend</div>
+        <div style={{ marginTop: '8px', color: 'var(--faint)' }}>→ Sending to your inbox</div>
         <div style={{ marginTop: '16px' }}>
           <span style={{ color: accentColor, animation: 'blink 1s step-end infinite' }}>▋</span>
         </div>
