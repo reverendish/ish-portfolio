@@ -4,6 +4,7 @@ import Nav from '@/components/Nav';
 import { useContactModal } from '@/components/ContactModalProvider';
 import HeroCanvas from '@/components/HeroCanvas';
 import OutreachDemoForm from '@/components/OutreachDemoForm';
+import ComplianceDemoForm from '@/components/ComplianceDemoForm';
 
 // ── useTyping ─────────────────────────────────────────────────────────────────
 function useTyping(words: string[], speed = 80, pause = 1800) {
@@ -108,26 +109,13 @@ const DEMOS: Record<string, {
     href: 'https://outreach.ishsitotombe.co.uk',
   },
   compliance: {
-    type: 'scripted',
+    type: 'interactive',
     color: '#a5b4fc',
     tabLabel: 'Compliance Checker',
     tag: 'Free · GDPR · PECR',
     title: 'UK Compliance Checker',
-    desc: 'Free forever. Instant UK compliance audit — GDPR, PECR, Companies Act, WCAG, and up to 260 sector-specific checks. Identifies critical issues with law citations in under a minute. I absorb the AWS costs so you don\'t have to.',
+    desc: 'Free forever. Enter any UK website URL and get an instant compliance audit — GDPR, PECR, Companies Act, WCAG, and up to 260 sector-specific checks. I absorb the AWS costs so you don\'t have to.',
     href: 'https://compliance.ishsitotombe.co.uk',
-    scriptLines: [
-      { text: '> example-estate-agent.co.uk', dim: true },
-      { text: '→ Sector: Estate Agents', accent: true },
-      { text: '→ Running 48 checks...', dim: true },
-      { text: '────────────────────────', dim: true },
-      { text: '✗ Cookie consent missing (PECR)', accent: true },
-      { text: '✗ ICO number not found', accent: true },
-      { text: '✗ Property Ombudsman absent', accent: true },
-      { text: '✓ HTTPS / SSL', dim: true },
-      { text: '✓ Privacy policy present', dim: true },
-      { text: '────────────────────────', dim: true },
-      { text: 'Score: 58/100 · 3 critical', accent: true },
-    ],
   },
 };
 
@@ -135,56 +123,6 @@ const TOOLS = [
   { key: 'outreach',   href: 'https://outreach.ishsitotombe.co.uk' },
   { key: 'compliance', href: 'https://compliance.ishsitotombe.co.uk' },
 ];
-
-// ── ScriptedOutput ────────────────────────────────────────────────────────────
-function ScriptedOutput({ lines, color, running, started }: {
-  lines: { text: string; dim?: boolean; accent?: boolean }[];
-  color: string;
-  running: boolean;
-  started: boolean;
-}) {
-  const [shownCount, setShownCount] = useState(0);
-
-  useEffect(() => {
-    if (!running) return;
-    setShownCount(0);
-    const timers = lines.map((_, i) =>
-      setTimeout(() => setShownCount(i + 1), i * 140 + 50)
-    );
-    return () => timers.forEach(clearTimeout);
-  }, [running, lines]);
-
-  return (
-    <div style={{
-      padding: '20px',
-      fontFamily: 'var(--font-geist-mono)',
-      fontSize: '0.75rem',
-      lineHeight: 1.75,
-      height: '280px',
-      overflowY: 'auto',
-      color: 'var(--muted)',
-    }}>
-      {!started && (
-        <span style={{ color: 'var(--faint)' }}>Click &apos;Run demo&apos; to see it in action</span>
-      )}
-      {lines.slice(0, shownCount).map((line, i) => (
-        <div
-          key={i}
-          style={{
-            color: line.accent ? color : line.dim ? 'var(--faint)' : 'var(--muted)',
-            animation: 'slideUp 0.2s ease forwards',
-            minHeight: '1.2em',
-          }}
-        >
-          {line.text || ' '}
-        </div>
-      ))}
-      {running && shownCount < lines.length && (
-        <span style={{ color, animation: 'blink 1s step-end infinite' }}>▋</span>
-      )}
-    </div>
-  );
-}
 
 // ── BrowserFrame ──────────────────────────────────────────────────────────────
 function BrowserFrame({ url, children }: { url: string; children: React.ReactNode }) {
@@ -238,22 +176,7 @@ export default function Home() {
   const [heroSubmitted, setHeroSubmitted] = useState(false);
   const [heroError, setHeroError] = useState('');
   const [activeDemo, setActiveDemo] = useState('outreach');
-  const [demoRunning, setDemoRunning] = useState(false);
-  const [demoStarted, setDemoStarted] = useState(false);
   const { openModal } = useContactModal();
-
-  const runDemo = () => {
-    if (demoRunning) return;
-    setDemoStarted(true);
-    setDemoRunning(true);
-    const lines = DEMOS[activeDemo].scriptLines || [];
-    setTimeout(() => setDemoRunning(false), lines.length * 140 + 300);
-  };
-
-  useEffect(() => {
-    setDemoStarted(false);
-    setDemoRunning(false);
-  }, [activeDemo]);
 
   const handleHeroSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -296,7 +219,6 @@ export default function Home() {
   };
 
   const demo = DEMOS[activeDemo];
-  const isScripted = demo.type === 'scripted';
 
   return (
     <>
@@ -400,39 +322,11 @@ export default function Home() {
             <div className="demoGrid">
               {/* Left — browser mockup */}
               <BrowserFrame url={demo.href}>
-                {/* Content area — fixed height, no internal grid */}
+                {/* Content area — fixed height */}
                 <div style={{ minHeight: '280px' }}>
-                  {demo.type === 'interactive' ? (
-                    <OutreachDemoForm accentColor={demo.color} />
-                  ) : (
-                    <ScriptedOutput
-                      lines={demo.scriptLines!}
-                      color={demo.color}
-                      running={demoRunning}
-                      started={demoStarted}
-                    />
-                  )}
+                  {activeDemo === 'outreach'    && <OutreachDemoForm accentColor={demo.color} />}
+                  {activeDemo === 'compliance'  && <ComplianceDemoForm accentColor={demo.color} />}
                 </div>
-
-                {/* Footer bar — only show Run demo for scripted tabs */}
-                {isScripted && (
-                  <div style={{ padding: '12px 20px', borderTop: '1px solid var(--border)', background: 'var(--surface-2)' }}>
-                    <button
-                      onClick={runDemo}
-                      disabled={demoRunning}
-                      style={{
-                        background: demoRunning ? 'transparent' : 'var(--accent)',
-                        color: demoRunning ? 'var(--muted)' : 'var(--accent-fg)',
-                        border: demoRunning ? '1px solid var(--border-2)' : 'none',
-                        borderRadius: '6px', padding: '7px 18px', fontSize: '0.8rem',
-                        fontWeight: 600, cursor: demoRunning ? 'default' : 'pointer',
-                        transition: 'all 0.2s', fontFamily: 'var(--font-geist-sans)',
-                      }}
-                    >
-                      {demoRunning ? 'Running...' : demoStarted ? 'Run again' : 'Run demo'}
-                    </button>
-                  </div>
-                )}
               </BrowserFrame>
 
               {/* Right — description */}
