@@ -41,5 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 # security — credentials and data exports
-*credentials*
+*credentials*.csv
+*credentials*.json
+*credentials*.env
 *.csv
