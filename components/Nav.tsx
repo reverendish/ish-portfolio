@@ -34,9 +34,15 @@ export default function Nav() {
       }}
     >
       <Link href="/" style={{ fontWeight: 700, fontSize: "1rem", letterSpacing: "-0.02em", color: "var(--text)", textDecoration: "none" }}>
-        ish.
+        ish
       </Link>
       <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
+        <a href="https://compliance.ishsitotombe.co.uk" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.875rem", color: "var(--muted)", textDecoration: "none", fontWeight: 500, transition: "color 0.15s" }} onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")} onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}>
+          Compliance
+        </a>
+        <a href="https://outreach.ishsitotombe.co.uk" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.875rem", color: "var(--muted)", textDecoration: "none", fontWeight: 500, transition: "color 0.15s" }} onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")} onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}>
+          Outreach
+        </a>
         <button
           onClick={openModal}
           style={{

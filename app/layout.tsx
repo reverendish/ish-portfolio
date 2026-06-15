@@ -7,6 +7,7 @@ import ContactModalProvider from "@/components/ContactModalProvider";
 export const metadata: Metadata = {
   title: "Ish Sitotombe — Automation Engineer",
   description: "I build AI automations that save small businesses hours every week. Based in Colchester, working UK-wide.",
+  icons: { icon: '/favicon.svg' },
   openGraph: {
     title: "Ish Sitotombe — Automation Engineer",
     description: "I build AI automations that save small businesses hours every week.",
@@ -19,7 +20,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className={GeistSans.className}>
-        {/* Hidden form for Netlify bot detection — the modal renders client-side */}
+        {/* Hidden form for Netlify — contact modal renders client-side */}
         <form name="contact" data-netlify="true" hidden aria-hidden="true">
           <input type="text" name="name" />
           <input type="email" name="email" />

@@ -11,12 +11,11 @@ export default function HeroCanvas() {
     const cont = canvas.parentElement!;
     let W = cont.clientWidth, H = cont.clientHeight;
 
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setSize(W, H);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x09090b);
     scene.fog = new THREE.Fog(0x09090b, 26, 50);
 
     const camera = new THREE.PerspectiveCamera(52, W / H, 0.1, 200);
