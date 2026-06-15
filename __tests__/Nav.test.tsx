@@ -25,7 +25,7 @@ beforeEach(() => {
 describe('render', () => {
   it('renders the brand logo', () => {
     render(<Nav />);
-    expect(screen.getByText(/ish\./i)).toBeInTheDocument();
+    expect(screen.getByText(/^ish$/i)).toBeInTheDocument();
   });
 
   it('renders "Get in touch" button', () => {

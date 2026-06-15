@@ -33,14 +33,14 @@ export default function Nav() {
         transition: "all 0.3s ease",
       }}
     >
-      <Link href="/" style={{ fontWeight: 700, fontSize: "1rem", letterSpacing: "-0.02em", color: "var(--text)", textDecoration: "none" }}>
+      <Link href="/" style={{ fontWeight: 700, fontSize: "1rem", letterSpacing: "-0.02em", color: scrolled ? "var(--text)" : "#f4f4f5", textDecoration: "none", transition: "color 0.3s ease" }}>
         ish
       </Link>
       <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-        <a href="https://compliance.ishsitotombe.co.uk" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.875rem", color: "var(--muted)", textDecoration: "none", fontWeight: 500, transition: "color 0.15s" }} onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")} onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}>
+        <a href="https://compliance.ishsitotombe.co.uk" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.875rem", color: scrolled ? "var(--muted)" : "rgba(244,244,245,0.7)", textDecoration: "none", fontWeight: 500, transition: "color 0.3s ease" }} onMouseEnter={e => (e.currentTarget.style.color = scrolled ? "var(--text)" : "#f4f4f5")} onMouseLeave={e => (e.currentTarget.style.color = scrolled ? "var(--muted)" : "rgba(244,244,245,0.7)")}>
           Compliance
         </a>
-        <a href="https://outreach.ishsitotombe.co.uk" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.875rem", color: "var(--muted)", textDecoration: "none", fontWeight: 500, transition: "color 0.15s" }} onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")} onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}>
+        <a href="https://outreach.ishsitotombe.co.uk" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.875rem", color: scrolled ? "var(--muted)" : "rgba(244,244,245,0.7)", textDecoration: "none", fontWeight: 500, transition: "color 0.3s ease" }} onMouseEnter={e => (e.currentTarget.style.color = scrolled ? "var(--text)" : "#f4f4f5")} onMouseLeave={e => (e.currentTarget.style.color = scrolled ? "var(--muted)" : "rgba(244,244,245,0.7)")}>
           Outreach
         </a>
         <button
