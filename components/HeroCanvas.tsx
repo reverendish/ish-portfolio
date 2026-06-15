@@ -2,6 +2,34 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
+const DARK = {
+  fog:     0x09090b,
+  grid1:   0x1e1e28,
+  grid2:   0x2e2e48,
+  frame:   0x3c3c72,
+  frameDim:0x2f2f5a,
+  frameFar:0x252548,
+  titleBar:0x4c4c90,
+  titleDim:0x3c3c70,
+  line:    0x2c2c58,
+  accent:  0xa5b4fc,
+  dimNode: 0x5c5caa,
+};
+
+const LIGHT = {
+  fog:     0xfafafa,
+  grid1:   0xd4d4d8,
+  grid2:   0xa1a1aa,
+  frame:   0x818cf8,
+  frameDim:0xa5b4fc,
+  frameFar:0xc7d2fe,
+  titleBar:0x818cf8,
+  titleDim:0xa5b4fc,
+  line:    0xc7d2fe,
+  accent:  0x6366f1,
+  dimNode: 0xa5b4fc,
+};
+
 export default function HeroCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -11,52 +39,59 @@ export default function HeroCanvas() {
     const cont = canvas.parentElement!;
     let W = cont.clientWidth, H = cont.clientHeight;
 
+    const isDark = () =>
+      document.documentElement.getAttribute('data-theme') !== 'light';
+
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setSize(W, H);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x09090b, 26, 50);
+    let c = isDark() ? DARK : LIGHT;
+    scene.fog = new THREE.Fog(c.fog, 26, 50);
 
     const camera = new THREE.PerspectiveCamera(52, W / H, 0.1, 200);
     camera.position.set(0, 5, 16);
     camera.lookAt(0, -1, -4);
 
-    // ── Floor grids ──────────────────────────────────────────
+    // ── Floor grids ──────────────────────────────────────────────────────────
+    const gridMats: THREE.Material[] = [];
     function addGrid(divisions: number, size: number, color: number, opacity: number) {
       const g = new THREE.GridHelper(size, divisions, color, color);
       (g.material as THREE.Material).transparent = true;
       (g.material as THREE.Material).opacity = opacity;
       g.position.y = -2.2;
       scene.add(g);
+      gridMats.push(g.material as THREE.Material);
+      return g.material as THREE.MeshBasicMaterial;
     }
-    addGrid(40, 60, 0x1e1e28, 0.60);
-    addGrid(8,  60, 0x2e2e48, 0.50);
+    const gm1 = addGrid(40, 60, c.grid1, 0.60);
+    const gm2 = addGrid(8,  60, c.grid2, 0.50);
 
-    // ── Wireframe browser frames ──────────────────────────────
+    // ── Wireframe browser frames ──────────────────────────────────────────────
+    const frameMats: THREE.LineBasicMaterial[] = [];
     function addFrame(w: number, h: number, x: number, y: number, z: number, col: number, opacity = 0.55) {
       const geo = new THREE.EdgesGeometry(new THREE.BoxGeometry(w, h, 0.04));
       const mat = new THREE.LineBasicMaterial({ color: col, transparent: true, opacity });
       const m = new THREE.LineSegments(geo, mat);
       m.position.set(x, y, z);
       scene.add(m);
+      frameMats.push(mat);
       return m;
     }
 
     const frames: THREE.LineSegments[] = [
-      addFrame(5.2, 3.2,    0,    0.2,  -9,   0x3c3c72),
-      addFrame(3.2, 2.0,  -5.2,  0.1,  -6,   0x2f2f5a, 0.45),
-      addFrame(3.0, 1.9,   5.0,  0.1,  -6.5, 0x2f2f5a, 0.45),
-      addFrame(2.0, 1.3,  -2.5,  0.8, -13,   0x252548, 0.35),
-      addFrame(1.8, 1.2,   2.2,  0.6, -14,   0x252548, 0.35),
+      addFrame(5.2, 3.2,    0,    0.2,  -9,   c.frame),
+      addFrame(3.2, 2.0,  -5.2,  0.1,  -6,   c.frameDim, 0.45),
+      addFrame(3.0, 1.9,   5.0,  0.1,  -6.5, c.frameDim, 0.45),
+      addFrame(2.0, 1.3,  -2.5,  0.8, -13,   c.frameFar, 0.35),
+      addFrame(1.8, 1.2,   2.2,  0.6, -14,   c.frameFar, 0.35),
     ];
+    addFrame(4.0, 0.28,   0,    1.26, -8.96, c.titleBar, 0.50);
+    addFrame(2.3, 0.22,  -5.2,  0.8,  -5.96, c.titleDim, 0.40);
+    addFrame(2.1, 0.22,   5.0,  0.75, -6.46, c.titleDim, 0.40);
 
-    // Thin title-bar lines on main frames
-    addFrame(4.0, 0.28,   0,    1.26, -8.96, 0x4c4c90, 0.50);
-    addFrame(2.3, 0.22,  -5.2,  0.8,  -5.96, 0x3c3c70, 0.40);
-    addFrame(2.1, 0.22,   5.0,  0.75, -6.46, 0x3c3c70, 0.40);
-
-    // ── Nodes ────────────────────────────────────────────────
+    // ── Nodes ────────────────────────────────────────────────────────────────
     const nodePositions: [number, number, number][] = [
       [0,    0.6,  -9  ],
       [-5.2, 0.5,  -6  ],
@@ -68,9 +103,9 @@ export default function HeroCanvas() {
       [3,   -1.8,  -1  ],
     ];
 
-    const sphereGeo   = new THREE.SphereGeometry(0.10, 12, 12);
-    const accentMat   = new THREE.MeshBasicMaterial({ color: 0xa5b4fc });
-    const dimMat      = new THREE.MeshBasicMaterial({ color: 0x5c5caa });
+    const sphereGeo = new THREE.SphereGeometry(0.10, 12, 12);
+    const accentMat = new THREE.MeshBasicMaterial({ color: c.accent });
+    const dimMat    = new THREE.MeshBasicMaterial({ color: c.dimNode });
 
     const nodeMeshes = nodePositions.map((p, i) => {
       const m = new THREE.Mesh(sphereGeo, i < 5 ? accentMat : dimMat);
@@ -79,7 +114,7 @@ export default function HeroCanvas() {
       return m;
     });
 
-    // ── Connection lines ─────────────────────────────────────
+    // ── Connection lines ─────────────────────────────────────────────────────
     const connPairs: [number, number][] = [
       [5, 0], [5, 1], [5, 2],
       [6, 1], [7, 2],
@@ -87,8 +122,7 @@ export default function HeroCanvas() {
       [6, 5], [7, 5],
     ];
 
-    const lineMat = new THREE.LineBasicMaterial({ color: 0x2c2c58, transparent: true, opacity: 0.65 });
-
+    const lineMat = new THREE.LineBasicMaterial({ color: c.line, transparent: true, opacity: 0.65 });
     connPairs.forEach(([a, b]) => {
       const pts = [
         new THREE.Vector3(...nodePositions[a]),
@@ -97,14 +131,14 @@ export default function HeroCanvas() {
       scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat));
     });
 
-    // ── Particles along connections ───────────────────────────
+    // ── Particles ────────────────────────────────────────────────────────────
     const pGeo = new THREE.SphereGeometry(0.055, 6, 6);
     const particles = connPairs.map(([a, b], i) => {
-      const mat = new THREE.MeshBasicMaterial({ color: 0xa5b4fc, transparent: true, opacity: 0.85 });
+      const mat = new THREE.MeshBasicMaterial({ color: c.accent, transparent: true, opacity: 0.85 });
       const mesh = new THREE.Mesh(pGeo, mat);
       scene.add(mesh);
       return {
-        mesh,
+        mesh, mat,
         start: new THREE.Vector3(...nodePositions[a]),
         end:   new THREE.Vector3(...nodePositions[b]),
         t:     i / connPairs.length,
@@ -112,12 +146,35 @@ export default function HeroCanvas() {
       };
     });
 
-    // ── Animation ────────────────────────────────────────────
-    const baseY    = nodePositions.map(p => p[1]);
+    // ── Theme switching ──────────────────────────────────────────────────────
+    function applyTheme() {
+      c = isDark() ? DARK : LIGHT;
+      (scene.fog as THREE.Fog).color.setHex(c.fog);
+      (gm1 as unknown as THREE.LineBasicMaterial).color?.setHex(c.grid1);
+      (gm2 as unknown as THREE.LineBasicMaterial).color?.setHex(c.grid2);
+      frameMats.forEach((mat, i) => {
+        const col = i === 0 ? c.frame
+                  : i === 1 || i === 2 ? c.frameDim
+                  : i === 3 || i === 4 ? c.frameFar
+                  : i === 5 ? c.titleBar
+                  : c.titleDim;
+        mat.color.setHex(col);
+      });
+      lineMat.color.setHex(c.line);
+      accentMat.color.setHex(c.accent);
+      dimMat.color.setHex(c.dimNode);
+      particles.forEach(p => p.mat.color.setHex(c.accent));
+    }
+
+    const observer = new MutationObserver(applyTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    // ── Animation ────────────────────────────────────────────────────────────
+    const baseY      = nodePositions.map(p => p[1]);
     const frameBaseY = [0.2, 0.1, 0.1, 0.8, 0.6];
-    const tmp      = new THREE.Vector3();
-    let   clock    = 0;
-    let   animId   = 0;
+    const tmp        = new THREE.Vector3();
+    let   clock      = 0;
+    let   animId     = 0;
 
     function animate() {
       animId = requestAnimationFrame(animate);
@@ -130,11 +187,9 @@ export default function HeroCanvas() {
       nodeMeshes.forEach((m, i) => {
         m.position.y = baseY[i] + Math.sin(clock * 0.9 + i * 1.4) * 0.11;
       });
-
       frames.forEach((f, i) => {
         f.position.y = frameBaseY[i] + Math.sin(clock * 0.65 + i * 2.0) * 0.06;
       });
-
       particles.forEach(p => {
         p.t += p.speed;
         if (p.t > 1) p.t = 0;
@@ -146,10 +201,9 @@ export default function HeroCanvas() {
     }
     animate();
 
-    // ── Resize ───────────────────────────────────────────────
+    // ── Resize ───────────────────────────────────────────────────────────────
     const onResize = () => {
-      W = cont.clientWidth;
-      H = cont.clientHeight;
+      W = cont.clientWidth; H = cont.clientHeight;
       camera.aspect = W / H;
       camera.updateProjectionMatrix();
       renderer.setSize(W, H);
@@ -158,6 +212,7 @@ export default function HeroCanvas() {
 
     return () => {
       cancelAnimationFrame(animId);
+      observer.disconnect();
       window.removeEventListener('resize', onResize);
       renderer.dispose();
     };
@@ -166,13 +221,7 @@ export default function HeroCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      style={{
-        position: 'absolute',
-        inset: 0,
-        width: '100%',
-        height: '100%',
-        display: 'block',
-      }}
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }}
     />
   );
 }
