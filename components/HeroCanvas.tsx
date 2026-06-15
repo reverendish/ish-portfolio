@@ -63,7 +63,7 @@ export default function HeroCanvas() {
       g.position.y = -2.2;
       scene.add(g);
       gridMats.push(g.material as THREE.Material);
-      return g.material as THREE.MeshBasicMaterial;
+      return g.material as THREE.LineBasicMaterial;
     }
     const gm1 = addGrid(40, 60, c.grid1, 0.60);
     const gm2 = addGrid(8,  60, c.grid2, 0.50);
@@ -150,8 +150,8 @@ export default function HeroCanvas() {
     function applyTheme() {
       c = isDark() ? DARK : LIGHT;
       (scene.fog as THREE.Fog).color.setHex(c.fog);
-      (gm1 as unknown as THREE.LineBasicMaterial).color?.setHex(c.grid1);
-      (gm2 as unknown as THREE.LineBasicMaterial).color?.setHex(c.grid2);
+      gm1.color.setHex(c.grid1);
+      gm2.color.setHex(c.grid2);
       frameMats.forEach((mat, i) => {
         const col = i === 0 ? c.frame
                   : i === 1 || i === 2 ? c.frameDim
