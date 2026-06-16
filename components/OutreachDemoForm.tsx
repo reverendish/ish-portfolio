@@ -3,26 +3,12 @@ import { useState } from 'react';
 
 type DemoState = 'idle' | 'loading' | 'done' | 'error';
 
-const BUSINESS_PRESETS = [
-  'estate agent',
-  'letting agent',
-  'accountancy firm',
-  'construction company',
-  'recruitment agency',
-  'IT company',
-  'law firm',
-  'dental practice',
-  'restaurant or café',
-  'other',
-];
-
 interface Props {
   accentColor?: string;
 }
 
 export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
   const [name, setName]             = useState('');
-  const [business, setBusiness]     = useState('');
   const [email, setEmail]           = useState('');
   const [state, setState]           = useState<DemoState>('idle');
   const [emailText, setEmailText]   = useState('');
@@ -47,7 +33,7 @@ export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
       const res = await fetch(`${apiUrl}/demo-send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, business, recipientEmail: email }),
+        body: JSON.stringify({ name, recipientEmail: email }),
       });
 
       const data = await res.json();
@@ -158,35 +144,19 @@ export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
       style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '10px', minHeight: '240px' }}
     >
       <p style={{ fontSize: '0.75rem', color: 'var(--muted)', margin: '0 0 4px', lineHeight: 1.5 }}>
-        Fill in your details — I'll generate a real cold email and send it to your inbox.
+        Enter your name or business name — I'll generate a personalised cold email and send it straight to your inbox.
       </p>
 
       <div>
-        <label style={labelStyle} htmlFor="demo-name">Your first name</label>
+        <label style={labelStyle} htmlFor="demo-name">Your name or business name</label>
         <input
           id="demo-name"
           required
           value={name}
           onChange={e => setName(e.target.value)}
-          placeholder="e.g. Sarah"
+          placeholder="e.g. Sarah or Acme Ltd"
           style={inputStyle}
         />
-      </div>
-
-      <div>
-        <label style={labelStyle} htmlFor="demo-business">Your business type</label>
-        <select
-          id="demo-business"
-          required
-          value={business}
-          onChange={e => setBusiness(e.target.value)}
-          style={{ ...inputStyle, cursor: 'pointer' }}
-        >
-          <option value="" disabled>Select...</option>
-          {BUSINESS_PRESETS.map(p => (
-            <option key={p} value={p}>{p.charAt(0).toUpperCase() + p.slice(1)}</option>
-          ))}
-        </select>
       </div>
 
       <div>
