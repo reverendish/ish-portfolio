@@ -214,9 +214,9 @@ export default function Home() {
           <FadeIn delay={300}>
             <h1 style={{ fontSize: 'clamp(2.6rem, 7vw, 5rem)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: '24px' }}>
               Stop doing<br />
-              <span style={{ color: 'var(--accent)' }}>
+              <span style={{ color: 'var(--hero-typed)' }}>
                 {typed}
-                <span style={{ borderRight: '3px solid var(--accent)', animation: 'blink 1s step-end infinite', marginLeft: '2px' }} />
+                <span style={{ borderRight: '3px solid var(--hero-typed)', animation: 'blink 1s step-end infinite', marginLeft: '2px' }} />
               </span><br />
               manually.
             </h1>

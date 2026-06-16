@@ -3,6 +3,7 @@
 /* ─── DARK MODE (default) ─── */
 :root,
 [data-theme="dark"] {
+  --hero-typed:   var(--accent);
   --bg:           #09090b;
   --text:         #f4f4f5;
   --muted:        #71717a;
@@ -21,6 +22,7 @@
 
 /* ─── LIGHT MODE ─── */
 [data-theme="light"] {
+  --hero-typed:   var(--text);
   --bg:           #fafafa;
   --text:         #09090b;
   --muted:        #71717a;

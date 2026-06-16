@@ -63,6 +63,7 @@ export default function HeroCanvas() {
     const isDark = () => document.documentElement.getAttribute('data-theme') !== 'light';
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setClearColor(0x000000, 0);
     renderer.setSize(W, H);
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 

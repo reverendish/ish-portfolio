@@ -33,7 +33,7 @@ export default function Nav() {
         transition: "all 0.3s ease",
       }}
     >
-      <Link href="/" style={{ fontWeight: 700, fontSize: "1rem", letterSpacing: "-0.02em", color: "var(--text)", textDecoration: "none", transition: "color 0.3s ease" }}>
+      <Link href="/" style={{ fontWeight: 700, fontSize: "1.25rem", letterSpacing: "-0.03em", color: "var(--text)", textDecoration: "none", transition: "color 0.3s ease" }}>
         ish
       </Link>
       <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
@@ -43,6 +43,7 @@ export default function Nav() {
         <a href="https://outreach.ishsitotombe.co.uk" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.875rem", color: "var(--muted)", textDecoration: "none", fontWeight: 500, transition: "color 0.3s ease" }} onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")} onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}>
           Outreach
         </a>
+        <ThemeToggle />
         <button
           onClick={openModal}
           style={{
@@ -62,7 +63,6 @@ export default function Nav() {
         >
           Get in touch
         </button>
-        <ThemeToggle />
       </div>
     </nav>
   );
