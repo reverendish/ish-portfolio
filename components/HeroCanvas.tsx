@@ -128,31 +128,28 @@ export default function HeroCanvas() {
     }
 
     function spawnChildren(parent: Branch) {
-      if (parent.depth >= 6) return;
+      if (parent.depth >= 3) return;
       const tip         = parent.pts[parent.pts.length - 1];
       const parentAngle = Math.atan2(
         tip.z - parent.pts[0].z,
         tip.x - parent.pts[0].x,
       );
       const parentLen = parent.pts[0].distanceTo(tip);
-      // More branching: 3-5 at shallow, 2-4 mid, 1-3 deep
-      const n =
-        parent.depth < 2 ? (rnd(3, 5.9) | 0) :
-        parent.depth < 4 ? (rnd(2, 4.9) | 0) :
-                           (rnd(1, 3.9) | 0);
+      // Sparse: 2 at root, 1-2 after that
+      const n = parent.depth === 0 ? 2 : (rnd(1, 2.9) | 0);
       for (let i = 0; i < n; i++) {
-        const spread = rnd(0.28, 1.0) * (Math.random() < 0.5 ? 1 : -1);
-        spawnBranch(tip, parentAngle + spread, parentLen * rnd(0.48, 0.72), parent.depth + 1);
+        const spread = rnd(0.35, 0.75) * (Math.random() < 0.5 ? 1 : -1);
+        spawnBranch(tip, parentAngle + spread, parentLen * rnd(0.55, 0.75), parent.depth + 1);
       }
     }
 
-    // 6 seeds spread around centre
-    for (let i = 0; i < 6; i++) {
-      const angle = (i / 6) * Math.PI * 2 + rnd(-0.2, 0.2);
+    // 3 seeds
+    for (let i = 0; i < 3; i++) {
+      const angle = (i / 3) * Math.PI * 2 + rnd(-0.3, 0.3);
       spawnBranch(
-        new THREE.Vector3(rnd(-0.8, 0.8), 0, rnd(-0.8, 0.8)),
+        new THREE.Vector3(rnd(-0.5, 0.5), 0, rnd(-0.5, 0.5)),
         angle,
-        rnd(4.0, 6.5),
+        rnd(4.5, 7.0),
         0,
       );
     }
@@ -219,7 +216,7 @@ export default function HeroCanvas() {
             anyGrowing = true;
           }
 
-          if (!b.nodeMesh && b.drawn >= b.pts.length && b.depth >= 4) {
+          if (!b.nodeMesh && b.drawn >= b.pts.length && b.depth >= 2) {
             const nm = new THREE.MeshBasicMaterial({ color: C.node, transparent: true, opacity: 0.55 });
             nodeMats.push(nm);
             const mesh = new THREE.Mesh(nodeGeo, nm);
@@ -231,7 +228,7 @@ export default function HeroCanvas() {
         }
 
         // Settle when nothing left to grow (wait for deeper branches to spawn)
-        if (!anyGrowing && allBranches.length > 6) {
+        if (!anyGrowing && allBranches.length > 3) {
           settled = true;
           // Lock camera at current position
           cam.position.set(cam.position.x, cam.position.y, cam.position.z);
