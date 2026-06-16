@@ -135,8 +135,7 @@ export default function AboutPage() {
               Get in touch →
             </a>
             <div style={{ marginTop: '16px' }}>
-              {/* TODO: Replace # with your actual LinkedIn URL */}
-              <a href="#" target="_blank" rel="noopener" style={{ fontSize: '0.82rem', color: 'var(--muted)', textDecoration: 'none' }}>
+              <a href="https://www.linkedin.com/in/ish-sitotombe-0905b7291/" target="_blank" rel="noopener" style={{ fontSize: '0.82rem', color: 'var(--muted)', textDecoration: 'none' }}>
                 Or find me on LinkedIn ↗
               </a>
             </div>

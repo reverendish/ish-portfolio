@@ -459,8 +459,7 @@ export default function Home() {
                   >
                     GitHub ↗
                   </a>
-                  {/* TODO: Replace # with your actual LinkedIn URL */}
-                  <a href="#" target="_blank" rel="noopener" style={{ color: 'var(--muted)', fontSize: '0.9rem', textDecoration: 'none' }}
+                  <a href="https://www.linkedin.com/in/ish-sitotombe-0905b7291/" target="_blank" rel="noopener" style={{ color: 'var(--muted)', fontSize: '0.9rem', textDecoration: 'none' }}
                     onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
                     onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
                   >
@@ -490,8 +489,7 @@ export default function Home() {
             >
               GitHub
             </a>
-            {/* TODO: Replace # with your actual LinkedIn URL */}
-            <a href="#" target="_blank" rel="noopener" style={{ color: 'var(--muted)', fontSize: '0.85rem', textDecoration: 'none' }}
+            <a href="https://www.linkedin.com/in/ish-sitotombe-0905b7291/" target="_blank" rel="noopener" style={{ color: 'var(--muted)', fontSize: '0.85rem', textDecoration: 'none' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
             >
