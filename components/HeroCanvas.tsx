@@ -69,9 +69,9 @@ export default function HeroCanvas() {
     const scene = new THREE.Scene();
     let C: Pal  = isDark() ? DARK : LIGHT;
 
-    const cam = new THREE.PerspectiveCamera(50, W / H, 0.1, 200);
-    cam.position.set(0, 16, 14);
-    cam.lookAt(0, 0, -3);
+    const cam = new THREE.PerspectiveCamera(65, W / H, 0.1, 200);
+    cam.position.set(0, 20, 10);
+    cam.lookAt(0, 0, -4);
 
     const nodeGeo  = new THREE.SphereGeometry(0.09, 8, 8);
     const sporeGeo = new THREE.SphereGeometry(0.04, 6, 6);
@@ -135,23 +135,25 @@ export default function HeroCanvas() {
         tip.x - parent.pts[0].x,
       );
       const parentLen = parent.pts[0].distanceTo(tip);
-      // Sparse: 2 at root, 1-2 after that
+      // Tight fork: always 2, narrow spread so they stay elongated
       const n = parent.depth === 0 ? 2 : (rnd(1, 2.9) | 0);
       for (let i = 0; i < n; i++) {
-        const spread = rnd(0.35, 0.75) * (Math.random() < 0.5 ? 1 : -1);
-        spawnBranch(tip, parentAngle + spread, parentLen * rnd(0.55, 0.75), parent.depth + 1);
+        const spread = rnd(0.15, 0.40) * (Math.random() < 0.5 ? 1 : -1);
+        spawnBranch(tip, parentAngle + spread, parentLen * rnd(0.60, 0.80), parent.depth + 1);
       }
     }
 
-    // 3 seeds
-    for (let i = 0; i < 3; i++) {
-      const angle = (i / 3) * Math.PI * 2 + rnd(-0.3, 0.3);
-      spawnBranch(
-        new THREE.Vector3(rnd(-0.5, 0.5), 0, rnd(-0.5, 0.5)),
-        angle,
-        rnd(4.5, 7.0),
-        0,
-      );
+    // 5 seeds spread across the visible plane: corners + centre
+    const seedPositions: [number, number, number, number][] = [
+      // [x, z, angle, length]
+      [ -7,  2,  0.3,               rnd(9, 12) ],   // left
+      [  7,  2,  Math.PI - 0.3,     rnd(9, 12) ],   // right
+      [  0, -6,  Math.PI / 2 * 3,   rnd(9, 12) ],   // far back centre
+      [ -4, -4,  0.8,               rnd(7, 10) ],   // back left
+      [  4, -4,  Math.PI - 0.8,     rnd(7, 10) ],   // back right
+    ];
+    for (const [x, z, angle, len] of seedPositions) {
+      spawnBranch(new THREE.Vector3(x, 0, z), angle + rnd(-0.15, 0.15), len, 0);
     }
 
     // Spore particles (subtle, visible after settling)
@@ -228,7 +230,7 @@ export default function HeroCanvas() {
         }
 
         // Settle when nothing left to grow (wait for deeper branches to spawn)
-        if (!anyGrowing && allBranches.length > 3) {
+        if (!anyGrowing && allBranches.length > 5) {
           settled = true;
           // Lock camera at current position
           cam.position.set(cam.position.x, cam.position.y, cam.position.z);
