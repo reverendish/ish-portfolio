@@ -2,210 +2,272 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
+/* ── Palettes ─────────────────────────────────────────────── */
 const DARK = {
-  fog:     0x09090b,
-  grid1:   0x1e1e28,
-  grid2:   0x2e2e48,
-  frame:   0x3c3c72,
-  frameDim:0x2f2f5a,
-  frameFar:0x252548,
-  titleBar:0x4c4c90,
-  titleDim:0x3c3c70,
-  line:    0x2c2c58,
-  accent:  0xa5b4fc,
-  dimNode: 0x5c5caa,
+  stemDeep: 0x312e81,
+  stemMid:  0x3730a3,
+  stemTip:  0x4f46e5,
+  node:     0xa5b4fc,
+  spore:    0xe0e7ff,
 };
-
 const LIGHT = {
-  fog:     0xfafafa,
-  grid1:   0xd4d4d8,
-  grid2:   0xa1a1aa,
-  frame:   0x818cf8,
-  frameDim:0xa5b4fc,
-  frameFar:0xc7d2fe,
-  titleBar:0x818cf8,
-  titleDim:0xa5b4fc,
-  line:    0xc7d2fe,
-  accent:  0x6366f1,
-  dimNode: 0xa5b4fc,
+  stemDeep: 0xc7d2fe,
+  stemMid:  0xa5b4fc,
+  stemTip:  0x818cf8,
+  node:     0x6366f1,
+  spore:    0x4338ca,
 };
+type Pal = typeof DARK;
+
+const rnd = (a: number, b: number) => a + Math.random() * (b - a);
+
+/* ── Branch ───────────────────────────────────────────────── */
+interface Branch {
+  pts:             THREE.Vector3[];
+  geo:             THREE.BufferGeometry;
+  mat:             THREE.LineBasicMaterial;
+  line:            THREE.Line;
+  drawn:           number;   // float, points drawn so far
+  rate:            number;   // points per frame
+  spawnAt:         number;   // trigger children at this drawn value
+  depth:           number;
+  children:        Branch[];
+  childrenSpawned: boolean;
+  nodeMesh:        THREE.Mesh | null;
+  nodeMat:         THREE.MeshBasicMaterial | null;
+}
+
+/** Organic curved points from origin in dirAngle (XZ plane) */
+function makePts(origin: THREE.Vector3, dirAngle: number, length: number): THREE.Vector3[] {
+  const N    = 24;
+  const bend = rnd(-0.42, 0.42);
+  const pts: THREE.Vector3[] = [];
+  for (let i = 0; i <= N; i++) {
+    const t       = i / N;
+    const lateral = bend * Math.sin(t * Math.PI) * length;
+    const x = origin.x + Math.cos(dirAngle) * length * t - Math.sin(dirAngle) * lateral;
+    const z = origin.z + Math.sin(dirAngle) * length * t + Math.cos(dirAngle) * lateral;
+    const y = rnd(-0.05, 0.05);
+    pts.push(new THREE.Vector3(x, y, z));
+  }
+  return pts;
+}
 
 export default function HeroCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const cont = canvas.parentElement!;
+    const canvas = canvasRef.current!;
+    const cont   = canvas.parentElement!;
     let W = cont.clientWidth, H = cont.clientHeight;
 
-    const isDark = () =>
-      document.documentElement.getAttribute('data-theme') !== 'light';
+    const isDark = () => document.documentElement.getAttribute('data-theme') !== 'light';
 
+    /* ── Renderer ── */
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setSize(W, H);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 
+    /* ── Scene / Camera ── */
     const scene = new THREE.Scene();
-    let c = isDark() ? DARK : LIGHT;
-    scene.fog = new THREE.Fog(c.fog, 26, 50);
+    let C: Pal  = isDark() ? DARK : LIGHT;
 
-    const camera = new THREE.PerspectiveCamera(52, W / H, 0.1, 200);
-    camera.position.set(0, 5, 16);
-    camera.lookAt(0, -1, -4);
+    const cam = new THREE.PerspectiveCamera(50, W / H, 0.1, 200);
+    cam.position.set(0, 16, 14);
+    cam.lookAt(0, 0, -3);
 
-    // ── Floor grids ──────────────────────────────────────────────────────────
-    const gridMats: THREE.Material[] = [];
-    function addGrid(divisions: number, size: number, color: number, opacity: number) {
-      const g = new THREE.GridHelper(size, divisions, color, color);
-      (g.material as THREE.Material).transparent = true;
-      (g.material as THREE.Material).opacity = opacity;
-      g.position.y = -2.2;
-      scene.add(g);
-      gridMats.push(g.material as THREE.Material);
-      return g.material as THREE.LineBasicMaterial;
+    /* ── Shared geometry ── */
+    const nodeGeo  = new THREE.SphereGeometry(0.10, 8, 8);
+    const sporeGeo = new THREE.SphereGeometry(0.045, 6, 6);
+
+    /* ── Tracked materials for theme updates / disposal ── */
+    const stemMats:  THREE.LineBasicMaterial[]  = [];
+    const nodeMats:  THREE.MeshBasicMaterial[]  = [];
+    const sporeMats: THREE.MeshBasicMaterial[]  = [];
+
+    const allBranches: Branch[] = [];
+
+    function stemColor(depth: number): number {
+      return depth === 0 ? C.stemDeep : depth <= 2 ? C.stemMid : C.stemTip;
     }
-    const gm1 = addGrid(40, 60, c.grid1, 0.60);
-    const gm2 = addGrid(8,  60, c.grid2, 0.50);
-
-    // ── Wireframe browser frames ──────────────────────────────────────────────
-    const frameMats: THREE.LineBasicMaterial[] = [];
-    function addFrame(w: number, h: number, x: number, y: number, z: number, col: number, opacity = 0.55) {
-      const geo = new THREE.EdgesGeometry(new THREE.BoxGeometry(w, h, 0.04));
-      const mat = new THREE.LineBasicMaterial({ color: col, transparent: true, opacity });
-      const m = new THREE.LineSegments(geo, mat);
-      m.position.set(x, y, z);
-      scene.add(m);
-      frameMats.push(mat);
-      return m;
+    function stemOpacity(depth: number): number {
+      return Math.max(0.20, 0.80 - depth * 0.10);
     }
 
-    const frames: THREE.LineSegments[] = [
-      addFrame(5.2, 3.2,    0,    0.2,  -9,   c.frame),
-      addFrame(3.2, 2.0,  -5.2,  0.1,  -6,   c.frameDim, 0.45),
-      addFrame(3.0, 1.9,   5.0,  0.1,  -6.5, c.frameDim, 0.45),
-      addFrame(2.0, 1.3,  -2.5,  0.8, -13,   c.frameFar, 0.35),
-      addFrame(1.8, 1.2,   2.2,  0.6, -14,   c.frameFar, 0.35),
-    ];
-    addFrame(4.0, 0.28,   0,    1.26, -8.96, c.titleBar, 0.50);
-    addFrame(2.3, 0.22,  -5.2,  0.8,  -5.96, c.titleDim, 0.40);
-    addFrame(2.1, 0.22,   5.0,  0.75, -6.46, c.titleDim, 0.40);
+    /* ── Branch factory ── */
+    function spawnBranch(
+      origin: THREE.Vector3,
+      angle:  number,
+      len:    number,
+      depth:  number,
+    ): Branch {
+      const pts = makePts(origin, angle, len);
 
-    // ── Nodes ────────────────────────────────────────────────────────────────
-    const nodePositions: [number, number, number][] = [
-      [0,    0.6,  -9  ],
-      [-5.2, 0.5,  -6  ],
-      [5.0,  0.5,  -6.5],
-      [-2.5, 1.2, -13  ],
-      [2.2,  1.0, -14  ],
-      [0,   -1.8,  -3  ],
-      [-3,  -1.8,  -1  ],
-      [3,   -1.8,  -1  ],
-    ];
-
-    const sphereGeo = new THREE.SphereGeometry(0.10, 12, 12);
-    const accentMat = new THREE.MeshBasicMaterial({ color: c.accent });
-    const dimMat    = new THREE.MeshBasicMaterial({ color: c.dimNode });
-
-    const nodeMeshes = nodePositions.map((p, i) => {
-      const m = new THREE.Mesh(sphereGeo, i < 5 ? accentMat : dimMat);
-      m.position.set(...p);
-      scene.add(m);
-      return m;
-    });
-
-    // ── Connection lines ─────────────────────────────────────────────────────
-    const connPairs: [number, number][] = [
-      [5, 0], [5, 1], [5, 2],
-      [6, 1], [7, 2],
-      [0, 3], [0, 4],
-      [6, 5], [7, 5],
-    ];
-
-    const lineMat = new THREE.LineBasicMaterial({ color: c.line, transparent: true, opacity: 0.65 });
-    connPairs.forEach(([a, b]) => {
-      const pts = [
-        new THREE.Vector3(...nodePositions[a]),
-        new THREE.Vector3(...nodePositions[b]),
-      ];
-      scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat));
-    });
-
-    // ── Particles ────────────────────────────────────────────────────────────
-    const pGeo = new THREE.SphereGeometry(0.055, 6, 6);
-    const particles = connPairs.map(([a, b], i) => {
-      const mat = new THREE.MeshBasicMaterial({ color: c.accent, transparent: true, opacity: 0.85 });
-      const mesh = new THREE.Mesh(pGeo, mat);
-      scene.add(mesh);
-      return {
-        mesh, mat,
-        start: new THREE.Vector3(...nodePositions[a]),
-        end:   new THREE.Vector3(...nodePositions[b]),
-        t:     i / connPairs.length,
-        speed: 0.0028 + Math.random() * 0.0018,
-      };
-    });
-
-    // ── Theme switching ──────────────────────────────────────────────────────
-    function applyTheme() {
-      c = isDark() ? DARK : LIGHT;
-      (scene.fog as THREE.Fog).color.setHex(c.fog);
-      gm1.color.setHex(c.grid1);
-      gm2.color.setHex(c.grid2);
-      frameMats.forEach((mat, i) => {
-        const col = i === 0 ? c.frame
-                  : i === 1 || i === 2 ? c.frameDim
-                  : i === 3 || i === 4 ? c.frameFar
-                  : i === 5 ? c.titleBar
-                  : c.titleDim;
-        mat.color.setHex(col);
+      const positions = new Float32Array(pts.length * 3);
+      pts.forEach((p, i) => {
+        positions[i * 3]     = p.x;
+        positions[i * 3 + 1] = p.y;
+        positions[i * 3 + 2] = p.z;
       });
-      lineMat.color.setHex(c.line);
-      accentMat.color.setHex(c.accent);
-      dimMat.color.setHex(c.dimNode);
-      particles.forEach(p => p.mat.color.setHex(c.accent));
+
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      geo.setDrawRange(0, 2);
+
+      const mat = new THREE.LineBasicMaterial({
+        color:       stemColor(depth),
+        transparent: true,
+        opacity:     stemOpacity(depth),
+      });
+      stemMats.push(mat);
+
+      const line = new THREE.Line(geo, mat);
+      scene.add(line);
+
+      const b: Branch = {
+        pts, geo, mat, line,
+        drawn:           2,
+        rate:            rnd(0.12, 0.26) * Math.pow(0.87, depth),
+        spawnAt:         pts.length * 0.70,
+        depth,
+        children:        [],
+        childrenSpawned: false,
+        nodeMesh:        null,
+        nodeMat:         null,
+      };
+      allBranches.push(b);
+      return b;
     }
 
-    const observer = new MutationObserver(applyTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    function spawnChildren(parent: Branch) {
+      if (parent.depth >= 5) return;
+      const tip         = parent.pts[parent.pts.length - 1];
+      const parentAngle = Math.atan2(
+        tip.z - parent.pts[0].z,
+        tip.x - parent.pts[0].x,
+      );
+      const parentLen = parent.pts[0].distanceTo(tip);
+      const n = parent.depth < 2 ? (rnd(2, 4) | 0) : (rnd(1, 3) | 0);
+      for (let i = 0; i < n; i++) {
+        const spread = rnd(0.3, 0.9) * (Math.random() < 0.5 ? 1 : -1);
+        spawnBranch(tip, parentAngle + spread, parentLen * rnd(0.50, 0.75), parent.depth + 1);
+      }
+    }
 
-    // ── Animation ────────────────────────────────────────────────────────────
-    const baseY      = nodePositions.map(p => p[1]);
-    const frameBaseY = [0.2, 0.1, 0.1, 0.8, 0.6];
-    const tmp        = new THREE.Vector3();
-    let   clock      = 0;
-    let   animId     = 0;
+    /* ── Seed the network ── */
+    for (let i = 0; i < 4; i++) {
+      const angle = (i / 4) * Math.PI * 2 + rnd(-0.25, 0.25);
+      spawnBranch(
+        new THREE.Vector3(rnd(-1, 1), 0, rnd(-1, 1)),
+        angle,
+        rnd(3.5, 5.5),
+        0,
+      );
+    }
+
+    /* ── Spore particles ── */
+    interface Spore {
+      mesh:  THREE.Mesh;
+      mat:   THREE.MeshBasicMaterial;
+      t:     number;
+      speed: number;
+      bi:    number;    // branch index
+    }
+    const spores: Spore[] = [];
+    for (let i = 0; i < 22; i++) {
+      const mat = new THREE.MeshBasicMaterial({ color: C.spore, transparent: true, opacity: 0.80 });
+      sporeMats.push(mat);
+      const mesh = new THREE.Mesh(sporeGeo, mat);
+      mesh.visible = false;
+      scene.add(mesh);
+      spores.push({
+        mesh, mat,
+        t:     Math.random(),
+        speed: rnd(0.003, 0.009),
+        bi:    Math.floor(Math.random() * 4),
+      });
+    }
+
+    /* ── Theme switching ── */
+    function applyTheme() {
+      C = isDark() ? DARK : LIGHT;
+      allBranches.forEach(b => b.mat.color.setHex(stemColor(b.depth)));
+      nodeMats.forEach(m  => m.color.setHex(C.node));
+      sporeMats.forEach(m => m.color.setHex(C.spore));
+    }
+    const observer = new MutationObserver(applyTheme);
+    observer.observe(document.documentElement, {
+      attributes:      true,
+      attributeFilter: ['data-theme'],
+    });
+
+    /* ── Animation ── */
+    const tmp = new THREE.Vector3();
+    let clock  = 0;
+    let animId = 0;
 
     function animate() {
       animId = requestAnimationFrame(animate);
-      clock += 0.007;
+      clock += 0.006;
 
-      camera.position.x = Math.sin(clock * 0.18) * 1.3;
-      camera.position.y = 5 + Math.sin(clock * 0.12) * 0.35;
-      camera.lookAt(0, -1, -4);
+      // Slow camera drift
+      cam.position.x = Math.sin(clock * 0.22) * 1.8;
+      cam.position.y = 16 + Math.sin(clock * 0.16) * 0.6;
+      cam.lookAt(0, 0, -3);
 
-      nodeMeshes.forEach((m, i) => {
-        m.position.y = baseY[i] + Math.sin(clock * 0.9 + i * 1.4) * 0.11;
-      });
-      frames.forEach((f, i) => {
-        f.position.y = frameBaseY[i] + Math.sin(clock * 0.65 + i * 2.0) * 0.06;
-      });
-      particles.forEach(p => {
-        p.t += p.speed;
-        if (p.t > 1) p.t = 0;
-        tmp.lerpVectors(p.start, p.end, p.t);
-        p.mesh.position.copy(tmp);
-      });
+      // Grow branches
+      for (const b of allBranches) {
+        if (b.drawn < b.pts.length) {
+          b.drawn = Math.min(b.drawn + b.rate, b.pts.length);
+          b.geo.setDrawRange(0, Math.floor(b.drawn));
+        }
 
-      renderer.render(scene, camera);
+        if (!b.childrenSpawned && b.drawn >= b.spawnAt) {
+          b.childrenSpawned = true;
+          spawnChildren(b);
+        }
+
+        // Tip node when fully grown (deeper branches only)
+        if (!b.nodeMesh && b.drawn >= b.pts.length && b.depth >= 3) {
+          const nm = new THREE.MeshBasicMaterial({ color: C.node, transparent: true, opacity: 0.60 });
+          nodeMats.push(nm);
+          const mesh = new THREE.Mesh(nodeGeo, nm);
+          mesh.position.copy(b.pts[b.pts.length - 1]);
+          scene.add(mesh);
+          b.nodeMesh = mesh;
+          b.nodeMat  = nm;
+        }
+      }
+
+      // Move spores along branches
+      for (const s of spores) {
+        const b    = allBranches[s.bi % allBranches.length];
+        const maxT = Math.min(b.drawn / b.pts.length, 1);
+        if (maxT < 0.05) { s.mesh.visible = false; continue; }
+
+        s.t += s.speed;
+        if (s.t > maxT) {
+          s.t  = 0;
+          s.bi = Math.floor(Math.random() * allBranches.length);
+        }
+
+        const fi = s.t * (b.pts.length - 1);
+        const i0 = Math.floor(fi);
+        const i1 = Math.min(i0 + 1, b.pts.length - 1);
+        tmp.lerpVectors(b.pts[i0], b.pts[i1], fi - i0);
+        s.mesh.position.copy(tmp);
+        s.mesh.visible = true;
+      }
+
+      renderer.render(scene, cam);
     }
     animate();
 
-    // ── Resize ───────────────────────────────────────────────────────────────
+    /* ── Resize ── */
     const onResize = () => {
       W = cont.clientWidth; H = cont.clientHeight;
-      camera.aspect = W / H;
-      camera.updateProjectionMatrix();
+      cam.aspect = W / H;
+      cam.updateProjectionMatrix();
       renderer.setSize(W, H);
     };
     window.addEventListener('resize', onResize);
@@ -214,6 +276,11 @@ export default function HeroCanvas() {
       cancelAnimationFrame(animId);
       observer.disconnect();
       window.removeEventListener('resize', onResize);
+      allBranches.forEach(b => { b.geo.dispose(); b.mat.dispose(); });
+      nodeMats.forEach(m  => m.dispose());
+      sporeMats.forEach(m => m.dispose());
+      nodeGeo.dispose();
+      sporeGeo.dispose();
       renderer.dispose();
     };
   }, []);
