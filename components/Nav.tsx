@@ -14,8 +14,17 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  const linkStyle = {
+    fontSize: "0.875rem",
+    color: "var(--muted)" as const,
+    textDecoration: "none",
+    fontWeight: 500,
+    transition: "color 0.2s ease",
+  };
+
   return (
     <nav
+      aria-label="Primary navigation"
       style={{
         position: "fixed",
         top: 0,
@@ -33,15 +42,25 @@ export default function Nav() {
         transition: "all 0.3s ease",
       }}
     >
-      <Link href="/" style={{ fontWeight: 700, fontSize: "1.25rem", letterSpacing: "-0.03em", color: "var(--text)", textDecoration: "none", transition: "color 0.3s ease" }}>
+      <Link href="/" style={{ fontWeight: 700, fontSize: "1.6rem", letterSpacing: "-0.03em", color: "var(--text)", textDecoration: "none" }}>
         ish
       </Link>
       <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-        <a href="https://compliance.ishsitotombe.co.uk" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.875rem", color: "var(--muted)", textDecoration: "none", fontWeight: 500, transition: "color 0.3s ease" }} onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")} onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}>
-          Compliance
+        <a
+          href="#about"
+          style={linkStyle}
+          onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
+          onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
+        >
+          About
         </a>
-        <a href="https://outreach.ishsitotombe.co.uk" target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.875rem", color: "var(--muted)", textDecoration: "none", fontWeight: 500, transition: "color 0.3s ease" }} onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")} onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}>
-          Outreach
+        <a
+          href="#tools"
+          style={linkStyle}
+          onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
+          onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
+        >
+          Work
         </a>
         <ThemeToggle />
         <button

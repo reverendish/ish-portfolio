@@ -56,8 +56,13 @@ export default function HeroCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current!;
-    const cont   = canvas.parentElement!;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const cont = canvas.parentElement;
+    if (!cont) return;
+
     let W = cont.clientWidth, H = cont.clientHeight;
 
     const isDark = () => document.documentElement.getAttribute('data-theme') !== 'light';
@@ -115,7 +120,6 @@ export default function HeroCanvas() {
       const b: Branch = {
         pts, geo, mat, line,
         drawn:           2,
-        // Fast initial burst — deeper branches also fast but slightly less so
         rate:            rnd(2.2, 4.0) * Math.pow(0.92, depth),
         spawnAt:         pts.length * 0.55,
         depth,
@@ -136,7 +140,6 @@ export default function HeroCanvas() {
         tip.x - parent.pts[0].x,
       );
       const parentLen = parent.pts[0].distanceTo(tip);
-      // Tight fork: always 2, narrow spread so they stay elongated
       const n = parent.depth === 0 ? 2 : (rnd(1, 2.9) | 0);
       for (let i = 0; i < n; i++) {
         const spread = rnd(0.15, 0.40) * (Math.random() < 0.5 ? 1 : -1);
@@ -144,20 +147,17 @@ export default function HeroCanvas() {
       }
     }
 
-    // 5 seeds spread across the visible plane: corners + centre
     const seedPositions: [number, number, number, number][] = [
-      // [x, z, angle, length]
-      [ -7,  2,  0.3,               rnd(9, 12) ],   // left
-      [  7,  2,  Math.PI - 0.3,     rnd(9, 12) ],   // right
-      [  0, -6,  Math.PI / 2 * 3,   rnd(9, 12) ],   // far back centre
-      [ -4, -4,  0.8,               rnd(7, 10) ],   // back left
-      [  4, -4,  Math.PI - 0.8,     rnd(7, 10) ],   // back right
+      [ -7,  2,  0.3,               rnd(9, 12) ],
+      [  7,  2,  Math.PI - 0.3,     rnd(9, 12) ],
+      [  0, -6,  Math.PI / 2 * 3,   rnd(9, 12) ],
+      [ -4, -4,  0.8,               rnd(7, 10) ],
+      [  4, -4,  Math.PI - 0.8,     rnd(7, 10) ],
     ];
     for (const [x, z, angle, len] of seedPositions) {
       spawnBranch(new THREE.Vector3(x, 0, z), angle + rnd(-0.15, 0.15), len, 0);
     }
 
-    // Spore particles (subtle, visible after settling)
     interface Spore {
       mesh:  THREE.Mesh;
       mat:   THREE.MeshBasicMaterial;
@@ -175,7 +175,6 @@ export default function HeroCanvas() {
       spores.push({ mesh, mat, t: Math.random(), speed: rnd(0.002, 0.006), bi: Math.floor(Math.random() * 6) });
     }
 
-    // Theme switching
     function applyTheme() {
       C = isDark() ? DARK : LIGHT;
       allBranches.forEach(b => b.mat.color.setHex(stemColor(b.depth)));
@@ -185,24 +184,21 @@ export default function HeroCanvas() {
     const observer = new MutationObserver(applyTheme);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
-    // Animation state
     const tmp     = new THREE.Vector3();
     let clock     = 0;
     let animId    = 0;
     let settled   = false;
-    let sporeAlpha = 0;        // fade spores in gently after settling
+    let sporeAlpha = 0;
 
     function animate() {
       animId = requestAnimationFrame(animate);
       clock += 0.006;
 
       if (!settled) {
-        // Camera drifts gently inward during growth
         cam.position.z = 14 - clock * 0.4;
         cam.position.y = 16 - clock * 0.2;
         cam.lookAt(0, 0, -3);
 
-        // Grow branches
         let anyGrowing = false;
         for (const b of allBranches) {
           if (b.drawn < b.pts.length) {
@@ -230,14 +226,11 @@ export default function HeroCanvas() {
           }
         }
 
-        // Settle when nothing left to grow (wait for deeper branches to spawn)
         if (!anyGrowing && allBranches.length > 5) {
           settled = true;
-          // Lock camera at current position
           cam.position.set(cam.position.x, cam.position.y, cam.position.z);
         }
       } else {
-        // Settled — slowly fade in spores as gentle life
         sporeAlpha = Math.min(sporeAlpha + 0.003, 0.75);
         sporeMats.forEach(m => { m.opacity = sporeAlpha; });
 
@@ -273,7 +266,7 @@ export default function HeroCanvas() {
       cancelAnimationFrame(animId);
       observer.disconnect();
       window.removeEventListener('resize', onResize);
-      allBranches.forEach(b => { b.geo.dispose(); b.mat.dispose(); });
+      allBranches.forEach(b => { scene.remove(b.line); b.geo.dispose(); b.mat.dispose(); });
       nodeMats.forEach(m  => m.dispose());
       sporeMats.forEach(m => m.dispose());
       nodeGeo.dispose();
@@ -285,7 +278,8 @@ export default function HeroCanvas() {
   return (
     <canvas
       ref={canvasRef}
-      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }}
+      aria-hidden="true"
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block', background: 'transparent' }}
     />
   );
 }

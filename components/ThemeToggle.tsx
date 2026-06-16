@@ -5,10 +5,9 @@ export default function ThemeToggle() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
-    const saved = localStorage.getItem('theme') as 'dark' | 'light' | null;
-    const initial = saved || 'dark';
-    setTheme(initial);
-    document.documentElement.setAttribute('data-theme', initial);
+    // Read whatever the inline FOUC script already set on <html>
+    const current = document.documentElement.getAttribute('data-theme') as 'dark' | 'light' | null;
+    setTheme(current ?? 'dark');
   }, []);
 
   const toggle = () => {
@@ -36,7 +35,7 @@ export default function ThemeToggle() {
         lineHeight: 1,
       }}
     >
-      {theme === 'dark' ? '◑ light' : '◑ dark'}
+      {theme === 'dark' ? '☀ light' : '☾ dark'}
     </button>
   );
 }

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface Props {
   isOpen: boolean;
@@ -8,12 +8,15 @@ interface Props {
 
 function ContactForm({ onClose }: { onClose: () => void }) {
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending]     = useState(false);
   const [form, setForm]           = useState({ name: '', email: '', business: '', problem: '' });
   const [error, setError]         = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (sending) return;
     setError('');
+    setSending(true);
     try {
       const res = await fetch('/', {
         method: 'POST',
@@ -24,6 +27,8 @@ function ContactForm({ onClose }: { onClose: () => void }) {
       else setError('Something went wrong. Please try again.');
     } catch {
       setError('Something went wrong. Please try again.');
+    } finally {
+      setSending(false);
     }
   };
 
@@ -61,17 +66,20 @@ function ContactForm({ onClose }: { onClose: () => void }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
         <input
           required name="name" aria-label="Your name" placeholder="Your name"
+          autoComplete="name"
           value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
           style={inputStyle}
         />
         <input
           required name="business" aria-label="Business name" placeholder="Business name"
+          autoComplete="organization"
           value={form.business} onChange={e => setForm(f => ({ ...f, business: e.target.value }))}
           style={inputStyle}
         />
       </div>
       <input
         required type="email" name="email" aria-label="Email address" placeholder="Email address"
+        autoComplete="email"
         value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
         style={inputStyle}
       />
@@ -81,12 +89,13 @@ function ContactForm({ onClose }: { onClose: () => void }) {
         value={form.problem} onChange={e => setForm(f => ({ ...f, problem: e.target.value }))}
         style={{ ...inputStyle, resize: 'vertical' }}
       />
-      {error && <p style={{ fontSize: '0.82rem', color: '#fca5a5' }}>{error}</p>}
+      {error && <p style={{ fontSize: '0.82rem', color: 'var(--status-red)' }}>{error}</p>}
       <button
         type="submit"
-        style={{ background: 'var(--accent)', color: 'var(--accent-fg)', fontWeight: 700, border: 'none', borderRadius: '8px', padding: '14px', fontSize: '1rem', cursor: 'pointer', fontFamily: 'inherit' }}
+        disabled={sending}
+        style={{ background: 'var(--accent)', color: 'var(--accent-fg)', fontWeight: 700, border: 'none', borderRadius: '8px', padding: '14px', fontSize: '1rem', cursor: sending ? 'default' : 'pointer', fontFamily: 'inherit', opacity: sending ? 0.7 : 1, transition: 'opacity 0.15s' }}
       >
-        Send it over
+        {sending ? 'Sending…' : 'Send it over'}
       </button>
       <p style={{ fontSize: '0.8rem', color: 'var(--faint)', textAlign: 'center' }}>
         No spam. Just a reply from me.
@@ -96,6 +105,8 @@ function ContactForm({ onClose }: { onClose: () => void }) {
 }
 
 export default function ContactModal({ isOpen, onClose }: Props) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
   // Close on Escape
   useEffect(() => {
     if (!isOpen) return;
@@ -108,6 +119,28 @@ export default function ContactModal({ isOpen, onClose }: Props) {
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
+  }, [isOpen]);
+
+  // Focus trap
+  useEffect(() => {
+    if (!isOpen || !modalRef.current) return;
+    const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+      'button, input, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+    first?.focus();
+
+    const trap = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last?.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first?.focus(); }
+      }
+    };
+    window.addEventListener('keydown', trap);
+    return () => window.removeEventListener('keydown', trap);
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -126,6 +159,10 @@ export default function ContactModal({ isOpen, onClose }: Props) {
       }}
     >
       <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="contact-modal-title"
         onClick={e => e.stopPropagation()}
         style={{
           background: 'var(--bg)',
@@ -165,7 +202,7 @@ export default function ContactModal({ isOpen, onClose }: Props) {
           <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--faint)', fontWeight: 500 }}>
             Get in touch
           </span>
-          <h2 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1, marginTop: '8px', marginBottom: '6px', color: 'var(--text)' }}>
+          <h2 id="contact-modal-title" style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1, marginTop: '8px', marginBottom: '6px', color: 'var(--text)' }}>
             What's slowing you down?
           </h2>
           <p style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>

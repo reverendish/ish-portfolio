@@ -24,7 +24,6 @@ export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
     setState('loading');
     setError('');
 
-    // Animate loading dots
     const dotTimer = setInterval(() => setLoadingDot(d => (d + 1) % 4), 400);
 
     try {
@@ -56,6 +55,8 @@ export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
     setState('idle');
     setEmailText('');
     setError('');
+    setName('');
+    setEmail('');
   };
 
   const inputStyle: React.CSSProperties = {
@@ -78,13 +79,12 @@ export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
     marginBottom: '4px',
   };
 
-  // ── Loading state ───────────────────────────────────────────────────────────
   if (state === 'loading') {
     const dots = '.'.repeat(loadingDot);
     return (
       <div style={{ padding: '24px 20px', fontFamily: 'var(--font-geist-mono)', fontSize: '0.75rem', color: 'var(--muted)', minHeight: '240px' }}>
-        <div style={{ color: accentColor, marginBottom: '12px' }}>→ Generating your email{dots}</div>
-        <div style={{ color: 'var(--faint)' }}>→ Calling Claude via Bedrock</div>
+        <div style={{ color: accentColor, marginBottom: '12px' }}>→ Writing your personalised email{dots}</div>
+        <div style={{ color: 'var(--faint)' }}>→ Personalising for {name || 'you'}</div>
         <div style={{ marginTop: '8px', color: 'var(--faint)' }}>→ Sending to your inbox</div>
         <div style={{ marginTop: '16px' }}>
           <span style={{ color: accentColor, animation: 'blink 1s step-end infinite' }}>▋</span>
@@ -93,7 +93,6 @@ export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
     );
   }
 
-  // ── Done state ──────────────────────────────────────────────────────────────
   if (state === 'done') {
     const lines = emailText.trim().split('\n');
     const subjectLine = lines.find(l => l.toLowerCase().startsWith('subject:'));
@@ -136,7 +135,6 @@ export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
     );
   }
 
-  // ── Idle / error state ──────────────────────────────────────────────────────
   return (
     <form
       onSubmit={handleSubmit}
@@ -173,7 +171,7 @@ export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
       </div>
 
       {state === 'error' && (
-        <p style={{ fontSize: '0.72rem', color: '#fca5a5', margin: 0 }}>{error}</p>
+        <p style={{ fontSize: '0.72rem', color: 'var(--status-red)', margin: 0 }}>{error}</p>
       )}
 
       <button

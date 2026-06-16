@@ -1,0 +1,31 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#09090b"/>
+
+  <!-- Dot grid -->
+  <defs>
+    <pattern id="dots" x="0" y="0" width="44" height="44" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="rgba(255,255,255,0.07)"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+
+  <!-- Accent bar -->
+  <rect x="64" y="64" width="4" height="502" rx="2" fill="#a5b4fc"/>
+
+  <!-- Name -->
+  <text x="104" y="180" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="800" letter-spacing="-3" fill="#f4f4f5">Ish Sitotombe</text>
+
+  <!-- Tagline -->
+  <text x="104" y="258" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="500" fill="#a5b4fc">AI Automation for UK Agencies</text>
+
+  <!-- Divider -->
+  <rect x="104" y="292" width="600" height="1" fill="#27272a"/>
+
+  <!-- Description -->
+  <text x="104" y="340" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#71717a">Custom automations for agencies and B2B firms.</text>
+  <text x="104" y="376" font-family="system-ui, -apple-system, sans-serif" font-size="24" fill="#71717a">Built fast. Tailored to how you work.</text>
+
+  <!-- URL -->
+  <text x="104" y="540" font-family="ui-monospace, monospace" font-size="20" fill="#3f3f46">ishsitotombe.co.uk</text>
+</svg>
