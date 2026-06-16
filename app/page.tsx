@@ -211,7 +211,7 @@ export default function Home() {
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '180px', zIndex: 1, pointerEvents: 'none', background: 'linear-gradient(to bottom, transparent, var(--bg))' }} />
 
         <div style={{ maxWidth: '900px', margin: '0 auto', width: '100%', position: 'relative', zIndex: 2 }}>
-          <FadeIn>
+          <FadeIn delay={300}>
             <h1 style={{ fontSize: 'clamp(2.6rem, 7vw, 5rem)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: '24px' }}>
               Stop doing<br />
               <span style={{ color: 'var(--accent)' }}>
@@ -222,13 +222,13 @@ export default function Home() {
             </h1>
           </FadeIn>
 
-          <FadeIn delay={200}>
+          <FadeIn delay={700}>
             <p style={{ fontSize: '1.1rem', color: 'var(--muted)', maxWidth: '480px', marginBottom: '40px', lineHeight: 1.75 }}>
               I build custom AI automations that take the repetitive parts of running your business off your plate — so you can focus on the work that actually makes you money.
             </p>
           </FadeIn>
 
-          <FadeIn delay={400}>
+          <FadeIn delay={1100}>
             <button onClick={openModal} style={{ background: 'var(--accent)', color: 'var(--accent-fg)', fontWeight: 700, border: 'none', borderRadius: '8px', padding: '13px 22px', fontSize: '0.95rem', cursor: 'pointer' }}>
               Get in touch →
             </button>
