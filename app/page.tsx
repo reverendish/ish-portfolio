@@ -192,10 +192,10 @@ export default function Home() {
   };
 
   const sectionH2: React.CSSProperties = {
-    fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
+    fontSize: 'clamp(2.4rem, 5vw, 3.6rem)',
     fontWeight: 800,
     letterSpacing: '-0.04em',
-    lineHeight: 1.1,
+    lineHeight: 1.05,
     marginBottom: '12px',
   };
 
