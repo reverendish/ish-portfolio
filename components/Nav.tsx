@@ -47,20 +47,20 @@ export default function Nav() {
       </Link>
       <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
         <a
-          href="#about"
+          href="https://compliance.ishsitotombe.co.uk"
           style={linkStyle}
           onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
           onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
         >
-          About
+          Compliance
         </a>
         <a
-          href="#tools"
+          href="https://outreach.ishsitotombe.co.uk"
           style={linkStyle}
           onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
           onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
         >
-          Work
+          Outreach
         </a>
         <ThemeToggle />
         <button

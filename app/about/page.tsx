@@ -5,7 +5,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'About — Ish Sitotombe',
-  description: 'AI automation engineer based in Colchester, UK. Building custom workflows for agencies and B2B service firms.',
+  description: 'Business automations and custom software. Based in Colchester, UK.',
 };
 
 const TOOLS = [
@@ -35,32 +35,22 @@ export default function AboutPage() {
               <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.05, marginBottom: '8px' }}>
                 Ish Sitotombe
               </h1>
-              <p style={{ color: 'var(--accent)', fontSize: '1rem', fontWeight: 500 }}>
-                AI Automation Engineer · Colchester, UK
+              <p style={{ color: 'var(--muted)', fontSize: '1rem', fontWeight: 500 }}>
+                Colchester, UK
               </p>
             </div>
           </div>
 
-          {/* Bio — PLACEHOLDER, update before launch */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginBottom: '60px' }}>
             <p style={{ color: 'var(--muted)', fontSize: '1.05rem', lineHeight: 1.85 }}>
-              I build custom AI automations for UK agencies and B2B service firms — the kind of workflows that are too specific for Zapier templates and too expensive for a traditional dev shop.
+              I build business automations and custom software. Based in Colchester, UK.
             </p>
             <p style={{ color: 'var(--muted)', fontSize: '1.05rem', lineHeight: 1.85 }}>
-              {/*
-                TODO: Add your background here. Examples:
-                - "I spent X years at [Company] building [thing] before going independent."
-                - "I started freelancing in [year] after [event/reason]."
-                - "My background is in [field] — I came to AI through [path]."
-              */}
-              [Add your background here — 2–3 sentences about where you came from and why you do what you do.]
+              I spent five years in construction before switching industries at the start of 2026. No degree, no bootcamp — I taught myself and built the tools on this site.
             </p>
             <p style={{ color: 'var(--muted)', fontSize: '1.05rem', lineHeight: 1.85 }}>
-              I specialise in UK-facing tooling: outreach pipelines using Companies House data, GDPR and PECR compliance auditing, and workflow automation that connects the systems your team already uses. I&apos;ve built everything on this site — the compliance checker, the outreach agent — and they run live as proof of what I can do for your business.
-            </p>
-            <p style={{ color: 'var(--muted)', fontSize: '1.05rem', lineHeight: 1.85 }}>
-              {/* TODO: Add something personal — makes you human to agency MDs. */}
-              [Optional: one personal sentence.]
+              If you&apos;ve got a process eating your team&apos;s time and want it built properly without agency overhead,{' '}
+              <a href="mailto:ishsitotombe@gmail.com" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 500 }}>get in touch</a>.
             </p>
           </div>
         </section>

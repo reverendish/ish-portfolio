@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Nav from '@/components/Nav';
 import { useContactModal } from '@/components/ContactModalProvider';
 import HeroCanvas from '@/components/HeroCanvas';
@@ -299,7 +298,7 @@ export default function Home() {
               <h2 style={{ ...sectionH2, marginBottom: '28px' }}>Built in public.</h2>
             </ClipReveal>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <a href="https://github.com/reverendish/mcp-x-mac-seed" target="_blank" rel="noopener" style={{ textDecoration: 'none', display: 'block' }}>
+              <a href="https://github.com/reverendish/mcp-x-mac-seed" style={{ textDecoration: 'none', display: 'block' }}>
                 <div
                   style={{ padding: '32px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', transition: 'border-color 0.2s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--accent)'; }}
@@ -323,7 +322,7 @@ export default function Home() {
                   </div>
                 </div>
               </a>
-              <a href="https://huggingface.co/datasets/reverendish/advanced-math-error-correction" target="_blank" rel="noopener" style={{ textDecoration: 'none', display: 'block' }}>
+              <a href="https://huggingface.co/datasets/reverendish/advanced-math-error-correction" style={{ textDecoration: 'none', display: 'block' }}>
                 <div
                   style={{ padding: '32px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', transition: 'border-color 0.2s' }}
                   onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--accent)'; }}
@@ -376,78 +375,6 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Pricing signal + CTA */}
-            <FadeIn delay={360}>
-              <div style={{ marginTop: '40px', padding: '28px 32px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px' }}>
-                <p style={{ color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.7, maxWidth: '520px' }}>
-                  <strong style={{ color: 'var(--text)', fontWeight: 700 }}>Most projects start from £1,500.</strong>{' '}
-                  I'll give you an honest quote on the first call — no vague day-rate estimates, no surprise invoices.
-                </p>
-                <button
-                  onClick={openModal}
-                  style={{ background: 'var(--accent)', color: 'var(--accent-fg)', fontWeight: 700, border: 'none', borderRadius: '8px', padding: '12px 22px', fontSize: '0.9rem', cursor: 'pointer', whiteSpace: 'nowrap' }}
-                  onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
-                  onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-                >
-                  Get in touch →
-                </button>
-              </div>
-            </FadeIn>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* ── ABOUT ────────────────────────────────────────── */}
-      <section id="about">
-        <div style={panel}>
-          <FadeIn>
-            <span style={labelStyle}>Who I am</span>
-            <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '48px', alignItems: 'start' }}>
-              <Image src="/ish.jpg" alt="Ish Sitotombe" width={120} height={120} style={{ borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-
-              <div>
-                <ClipReveal>
-                  <h2 style={{ fontSize: 'clamp(2rem, 4vw, 2.8rem)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.1, marginBottom: '20px' }}>
-                    Ish Sitotombe
-                  </h2>
-                </ClipReveal>
-
-                {/* PLACEHOLDER — update this copy before launch */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  <p style={{ color: 'var(--muted)', fontSize: '0.95rem', lineHeight: 1.8 }}>
-                    I'm an automation engineer based in Colchester, UK. I build custom AI systems for agencies and B2B service firms — the kind of workflows that are too specific for Zapier and too expensive for a traditional dev shop.
-                  </p>
-                  <p style={{ color: 'var(--muted)', fontSize: '0.95rem', lineHeight: 1.8 }}>
-                    I specialise in UK-facing tooling: outreach pipelines using Companies House data, GDPR and PECR compliance checks, and workflow automation that connects the systems your team already uses.
-                  </p>
-                  <p style={{ color: 'var(--muted)', fontSize: '0.95rem', lineHeight: 1.8 }}>
-                    {/* TODO: Add specific background/experience detail here */}
-                    [Add 1-2 sentences about your background — previous roles, years of experience, or what made you go independent.]
-                  </p>
-                </div>
-
-                <div style={{ display: 'flex', gap: '16px', marginTop: '24px', flexWrap: 'wrap' }}>
-                  <a href="/about" style={{ color: 'var(--accent)', fontSize: '0.9rem', fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-                    onMouseEnter={e => (e.currentTarget.style.opacity = '0.75')}
-                    onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
-                  >
-                    Read more →
-                  </a>
-                  <a href="https://github.com/reverendish" target="_blank" rel="noopener" style={{ color: 'var(--muted)', fontSize: '0.9rem', textDecoration: 'none' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
-                  >
-                    GitHub ↗
-                  </a>
-                  <a href="https://www.linkedin.com/in/ish-sitotombe-0905b7291/" target="_blank" rel="noopener" style={{ color: 'var(--muted)', fontSize: '0.9rem', textDecoration: 'none' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
-                  >
-                    LinkedIn ↗
-                  </a>
-                </div>
-              </div>
-            </div>
           </FadeIn>
         </div>
       </section>
