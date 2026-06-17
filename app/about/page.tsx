@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Nav from '@/components/Nav';
 import ContactModalProvider from '@/components/ContactModalProvider';
 import type { Metadata } from 'next';
@@ -27,21 +28,8 @@ export default function AboutPage() {
           </span>
 
           <div style={{ display: 'flex', gap: '32px', alignItems: 'center', flexWrap: 'wrap', marginBottom: '40px' }}>
-            {/*
-              TODO: Replace this placeholder div with:
-              <Image src="/ish.jpg" alt="Ish Sitotombe" width={160} height={160}
-                style={{ borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-              Place ish.jpg in /public/ when ready.
-            */}
-            <div style={{
-              width: '160px', height: '160px', borderRadius: '50%',
-              background: 'var(--accent-dim)', border: '2px solid var(--accent)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '2.4rem', fontWeight: 800, color: 'var(--accent)',
-              letterSpacing: '-0.03em', flexShrink: 0,
-            }}>
-              IS
-            </div>
+            <Image src="/ish.jpg" alt="Ish Sitotombe" width={160} height={160}
+              style={{ borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
 
             <div>
               <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1.05, marginBottom: '8px' }}>
