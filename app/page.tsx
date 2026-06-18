@@ -390,6 +390,12 @@ export default function Home() {
             >
               ishsitotombe@gmail.com
             </a>
+            <a href="/about" style={{ color: 'var(--muted)', fontSize: '0.85rem', textDecoration: 'none' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
+            >
+              About
+            </a>
             <a href="https://github.com/reverendish" target="_blank" rel="noopener" style={{ color: 'var(--muted)', fontSize: '0.85rem', textDecoration: 'none' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}

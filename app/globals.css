@@ -158,3 +158,17 @@ body::after {
   .howItWorksGrid { grid-template-columns: 1fr; }
   .testimonialsGrid { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 640px) {
+  .nav-secondary { display: none !important; }
+  nav[aria-label="Primary navigation"] { padding: 0 16px !important; }
+}
+
+.modal-input:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Nav from '@/components/Nav';
 import ContactModalProvider from '@/components/ContactModalProvider';
+import ContactCTA from './ContactCTA';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -106,12 +107,7 @@ export default function AboutPage() {
             <p style={{ color: 'var(--muted)', fontSize: '0.95rem', maxWidth: '420px', margin: '0 auto 28px', lineHeight: 1.7 }}>
               Tell me what&apos;s eating your team&apos;s time. I&apos;ll come back with an honest assessment and a quote if it makes sense.
             </p>
-            <a
-              href="/"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'var(--accent)', color: 'var(--accent-fg)', fontWeight: 700, padding: '13px 28px', borderRadius: '8px', textDecoration: 'none', fontSize: '0.95rem' }}
-            >
-              Get in touch →
-            </a>
+            <ContactCTA />
             <div style={{ marginTop: '16px' }}>
               <a href="https://www.linkedin.com/in/ish-sitotombe-0905b7291/" target="_blank" rel="noopener" style={{ fontSize: '0.82rem', color: 'var(--muted)', textDecoration: 'none' }}>
                 Or find me on LinkedIn ↗

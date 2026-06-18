@@ -6,20 +6,20 @@ import ContactModalProvider from "@/components/ContactModalProvider";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://ishsitotombe.co.uk'),
-  title: "Ish Sitotombe — AI Automation Engineer",
-  description: "Custom AI automations for UK agencies and B2B firms. Outreach, compliance, and workflow automation — built fast and tailored to your business.",
+  title: "Ish Sitotombe",
+  description: "Business automations and custom software. Based in Colchester, UK.",
   icons: { icon: '/favicon.ico' },
   openGraph: {
-    title: "Ish Sitotombe — AI Automation Engineer",
-    description: "Custom AI automations for UK agencies and B2B firms. Outreach, compliance, and workflow automation — built fast and tailored to your business.",
+    title: "Ish Sitotombe",
+    description: "Business automations and custom software. Based in Colchester, UK.",
     url: "https://ishsitotombe.co.uk",
     siteName: "Ish Sitotombe",
-    images: [{ url: '/og-image.svg', width: 1200, height: 630, alt: 'Ish Sitotombe — AI Automation for UK Agencies' }],
+    images: [{ url: '/og-image.svg', width: 1200, height: 630, alt: 'Ish Sitotombe' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Ish Sitotombe — AI Automation Engineer",
-    description: "Custom AI automations for UK agencies and B2B firms.",
+    title: "Ish Sitotombe",
+    description: "Business automations and custom software. Based in Colchester, UK.",
     images: ['/og-image.png'],
   },
 };
@@ -43,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           "@type": ["Person", "ProfessionalService"],
           "name": "Ish Sitotombe",
           "url": "https://ishsitotombe.co.uk",
-          "description": "AI automation engineer for UK agencies and B2B service firms",
+          "description": "Business automations and custom software. Based in Colchester, UK.",
           "areaServed": { "@type": "Country", "name": "United Kingdom" },
           "knowsAbout": ["AI automation", "workflow automation", "GDPR compliance", "UK Companies House API", "outreach automation"],
         }) }} />

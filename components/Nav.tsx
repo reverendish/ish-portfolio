@@ -6,12 +6,20 @@ import { useContactModal } from "./ContactModalProvider";
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { openModal } = useContactModal();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
 
   const linkStyle = {
@@ -46,23 +54,27 @@ export default function Nav() {
         ish
       </Link>
       <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-        <a
-          href="https://compliance.ishsitotombe.co.uk"
-          style={linkStyle}
-          onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-          onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
-        >
-          Compliance
-        </a>
-        <a
-          href="https://outreach.ishsitotombe.co.uk"
-          style={linkStyle}
-          onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-          onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
-        >
-          Outreach
-        </a>
-        <ThemeToggle />
+        {!isMobile && (
+          <>
+            <a
+              href="https://compliance.ishsitotombe.co.uk"
+              style={linkStyle}
+              onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
+              onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
+            >
+              Compliance
+            </a>
+            <a
+              href="https://outreach.ishsitotombe.co.uk"
+              style={linkStyle}
+              onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
+              onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
+            >
+              Outreach
+            </a>
+            <ThemeToggle />
+          </>
+        )}
         <button
           onClick={openModal}
           style={{

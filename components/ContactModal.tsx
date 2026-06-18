@@ -52,7 +52,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
     width: '100%', padding: '13px 16px',
     background: 'var(--surface)', border: '1px solid var(--border-2)',
     borderRadius: '8px', color: 'var(--text)', fontSize: '0.95rem',
-    fontFamily: 'inherit', outline: 'none',
+    fontFamily: 'inherit', outline: 'none', transition: 'border-color 0.15s, box-shadow 0.15s',
   };
 
   return (
@@ -68,26 +68,26 @@ function ContactForm({ onClose }: { onClose: () => void }) {
           required name="name" aria-label="Your name" placeholder="Your name"
           autoComplete="name"
           value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-          style={inputStyle}
+          style={inputStyle} className="modal-input"
         />
         <input
           required name="business" aria-label="Business name" placeholder="Business name"
           autoComplete="organization"
           value={form.business} onChange={e => setForm(f => ({ ...f, business: e.target.value }))}
-          style={inputStyle}
+          style={inputStyle} className="modal-input"
         />
       </div>
       <input
         required type="email" name="email" aria-label="Email address" placeholder="Email address"
         autoComplete="email"
         value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-        style={inputStyle}
+        style={inputStyle} className="modal-input"
       />
       <textarea
         required rows={4} name="problem" aria-label="Your biggest time sink"
         placeholder="What's the one task that eats the most of your time each week?"
         value={form.problem} onChange={e => setForm(f => ({ ...f, problem: e.target.value }))}
-        style={{ ...inputStyle, resize: 'vertical' }}
+        style={{ ...inputStyle, resize: 'vertical' }} className="modal-input"
       />
       {error && <p style={{ fontSize: '0.82rem', color: 'var(--status-red)' }}>{error}</p>}
       <button
