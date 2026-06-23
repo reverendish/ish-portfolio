@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "Ish Sitotombe",
     description: "Business automations and custom software. Based in Colchester, UK.",
-    images: ['/og-image.png'],
+    images: ['/og-image.svg'],
   },
 };
 
