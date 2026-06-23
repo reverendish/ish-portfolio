@@ -64,14 +64,6 @@ export default function Nav() {
             >
               Compliance
             </a>
-            <a
-              href="https://outreach.ishsitotombe.co.uk"
-              style={linkStyle}
-              onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-              onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
-            >
-              Outreach
-            </a>
             <ThemeToggle />
           </>
         )}
