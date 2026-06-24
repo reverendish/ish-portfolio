@@ -64,6 +64,14 @@ export default function Nav() {
             >
               Compliance
             </a>
+            <Link
+              href="/writing"
+              style={linkStyle}
+              onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
+              onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
+            >
+              Writing
+            </Link>
             <ThemeToggle />
           </>
         )}
