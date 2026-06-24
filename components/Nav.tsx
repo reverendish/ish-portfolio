@@ -7,6 +7,7 @@ import { useContactModal } from "./ContactModalProvider";
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const { openModal } = useContactModal();
 
   useEffect(() => {
@@ -16,7 +17,11 @@ export default function Nav() {
   }, []);
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth <= 640);
+    const check = () => {
+      const mobile = window.innerWidth <= 640;
+      setIsMobile(mobile);
+      if (!mobile) setMenuOpen(false);
+    };
     check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
@@ -30,6 +35,30 @@ export default function Nav() {
     transition: "color 0.2s ease",
   };
 
+  const navLinks = (
+    <>
+      <a
+        href="https://compliance.ishsitotombe.co.uk"
+        style={linkStyle}
+        onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
+        onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
+        onClick={() => setMenuOpen(false)}
+      >
+        Compliance
+      </a>
+      <Link
+        href="/writing"
+        style={linkStyle}
+        onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
+        onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
+        onClick={() => setMenuOpen(false)}
+      >
+        Writing
+      </Link>
+      <ThemeToggle />
+    </>
+  );
+
   return (
     <nav
       aria-label="Primary navigation"
@@ -39,13 +68,13 @@ export default function Nav() {
         left: 0,
         right: 0,
         zIndex: 50,
-        padding: "0 40px",
+        padding: "0 clamp(16px, 4vw, 40px)",
         height: "60px",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        background: scrolled ? "var(--nav-bg)" : "transparent",
-        backdropFilter: scrolled ? "blur(12px)" : "none",
+        background: scrolled || menuOpen ? "var(--nav-bg)" : "transparent",
+        backdropFilter: scrolled || menuOpen ? "blur(12px)" : "none",
         borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
         transition: "all 0.3s ease",
       }}
@@ -54,29 +83,29 @@ export default function Nav() {
         ish
       </Link>
       <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-        {!isMobile && (
-          <>
-            <a
-              href="https://compliance.ishsitotombe.co.uk"
-              style={linkStyle}
-              onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-              onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
-            >
-              Compliance
-            </a>
-            <Link
-              href="/writing"
-              style={linkStyle}
-              onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-              onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
-            >
-              Writing
-            </Link>
-            <ThemeToggle />
-          </>
+        {!isMobile && navLinks}
+        {isMobile && (
+          <button
+            onClick={() => setMenuOpen(v => !v)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            style={{
+              background: "transparent",
+              border: "1px solid var(--border-2)",
+              borderRadius: "6px",
+              padding: "6px 8px",
+              cursor: "pointer",
+              color: "var(--muted)",
+              fontSize: "1.1rem",
+              lineHeight: 1,
+              fontFamily: "monospace",
+            }}
+          >
+            {menuOpen ? "✕" : "☰"}
+          </button>
         )}
         <button
-          onClick={openModal}
+          onClick={() => { openModal(); setMenuOpen(false); }}
           style={{
             fontSize: "0.875rem",
             fontWeight: 600,
@@ -95,6 +124,26 @@ export default function Nav() {
           Get in touch
         </button>
       </div>
+
+      {isMobile && menuOpen && (
+        <div
+          style={{
+            position: "absolute",
+            top: "60px",
+            left: 0,
+            right: 0,
+            background: "var(--nav-bg)",
+            backdropFilter: "blur(12px)",
+            borderBottom: "1px solid var(--border)",
+            padding: "16px clamp(16px, 4vw, 40px)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+          }}
+        >
+          {navLinks}
+        </div>
+      )}
     </nav>
   );
 }

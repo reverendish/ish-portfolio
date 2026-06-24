@@ -14,13 +14,13 @@ export const metadata: Metadata = {
     description: "Business automations and custom software. Based in Colchester, UK.",
     url: "https://ishsitotombe.co.uk",
     siteName: "Ish Sitotombe",
-    images: [{ url: '/og-image.svg', width: 1200, height: 630, alt: 'Ish Sitotombe' }],
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Ish Sitotombe' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: "Ish Sitotombe",
     description: "Business automations and custom software. Based in Colchester, UK.",
-    images: ['/og-image.svg'],
+    images: ['/og-image.png'],
   },
 };
 
