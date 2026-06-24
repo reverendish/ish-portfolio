@@ -17,6 +17,10 @@ function useTyping(words: string[], speed = 80, pause = 1800) {
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setDisplay(words[0]);
+      return;
+    }
     const current = words[wordIdx];
     const timeout = setTimeout(() => {
       if (!deleting) {

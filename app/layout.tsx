@@ -31,12 +31,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Prevent theme flash — reads localStorage before React hydrates */}
         <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();` }} />
 
-        {/* PLAUSIBLE ANALYTICS — BUY SUBSCRIPTION BY 27/06/26
-            30-day free trial at https://plausible.io
-            Uncomment the line below and set data-domain to activate:
-        <script defer data-domain="ishsitotombe.co.uk" src="https://plausible.io/js/script.js"></script>
-        */}
-
         {/* Structured data */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
@@ -45,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           "url": "https://ishsitotombe.co.uk",
           "description": "Business automations and custom software. Based in Colchester, UK.",
           "areaServed": { "@type": "Country", "name": "United Kingdom" },
-          "knowsAbout": ["AI automation", "workflow automation", "GDPR compliance", "UK Companies House API", "outreach automation"],
+          "knowsAbout": ["business automation", "workflow automation", "GDPR compliance", "UK Companies House API", "outreach automation", "custom software"],
         }) }} />
       </head>
       <body className={GeistSans.className}>
