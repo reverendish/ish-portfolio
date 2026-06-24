@@ -8,9 +8,6 @@ import ComplianceDemoForm from '@/components/ComplianceDemoForm';
 import BrowserFrame from '@/components/BrowserFrame';
 import { FadeIn, ClipReveal } from '@/components/animations';
 
-// ── Feature flags ─────────────────────────────────────────────────────────────
-// Set to true once you have real testimonials to replace the placeholders below
-const SHOW_SOCIAL_PROOF = false;
 
 // ── Typewriter hook ───────────────────────────────────────────────────────────
 function useTyping(words: string[], speed = 80, pause = 1800) {
@@ -227,67 +224,6 @@ export default function Home() {
           </FadeIn>
         </div>
       </section>
-
-      {/* ── SOCIAL PROOF ────────────────────────────────── */}
-      {/* Set SHOW_SOCIAL_PROOF = true at the top of this file once you have real testimonials */}
-      {SHOW_SOCIAL_PROOF && (
-        <section id="testimonials">
-          <div style={panel}>
-            <FadeIn>
-              <span style={labelStyle}>What clients say</span>
-              <ClipReveal>
-                <h2 style={{ ...sectionH2, marginBottom: '40px' }}>Results that speak.</h2>
-              </ClipReveal>
-              <div className="testimonialsGrid">
-                {[
-                  {
-                    // PLACEHOLDER — replace with real quote before enabling
-                    quote: "We were spending 6 hours every Monday pulling together our weekly client report. Ish automated the whole thing — it runs Sunday night and lands in every client's inbox before they've had their morning coffee. Game-changer.",
-                    name: "Sarah M.",
-                    role: "Operations Director",
-                    company: "Digital Marketing Agency, London",
-                    metric: "6 hrs/week saved",
-                  },
-                  {
-                    // PLACEHOLDER — replace with real quote before enabling
-                    quote: "I'd tried Zapier three times and kept hitting the same wall. Ish built exactly what I needed in under a week — it handles all the edge cases Zapier couldn't. Worth every penny.",
-                    name: "James T.",
-                    role: "Founder",
-                    company: "B2B SaaS, Manchester",
-                    metric: "3 days to deploy",
-                  },
-                  {
-                    // PLACEHOLDER — replace with real quote before enabling
-                    quote: "The outreach tool pulled directors from Companies House, personalised each email, and sent them while we slept. We booked 4 discovery calls in the first week.",
-                    name: "Priya K.",
-                    role: "Head of Business Development",
-                    company: "PR Agency, Bristol",
-                    metric: "4 calls in week 1",
-                  },
-                ].map((t, i) => (
-                  <FadeIn key={i} delay={i * 100}>
-                    <div style={{ padding: '28px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                      <p style={{ color: 'var(--text)', fontSize: '0.9rem', lineHeight: 1.75, fontStyle: 'italic' }}>
-                        "{t.quote}"
-                      </p>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                        <div>
-                          <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{t.name}</div>
-                          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>{t.role}</div>
-                          <div style={{ fontSize: '0.78rem', color: 'var(--faint)' }}>{t.company}</div>
-                        </div>
-                        <span style={{ fontSize: '0.72rem', padding: '4px 10px', background: 'var(--accent-dim)', border: '1px solid var(--accent)', borderRadius: '100px', color: 'var(--accent)', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                          {t.metric}
-                        </span>
-                      </div>
-                    </div>
-                  </FadeIn>
-                ))}
-              </div>
-            </FadeIn>
-          </div>
-        </section>
-      )}
 
       {/* ── PROJECTS ──────────────────────────────────────── */}
       <section id="projects">
