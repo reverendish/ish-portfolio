@@ -45,3 +45,6 @@ next-env.d.ts
 *credentials*.json
 *credentials*.env
 *.csv
+
+# Local Netlify folder
+.netlify

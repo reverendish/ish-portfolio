@@ -310,6 +310,30 @@ export default function Home() {
                   </div>
                 </div>
               </a>
+              <a href="/writing/hsi-mvp" style={{ textDecoration: 'none', display: 'block' }}>
+                <div
+                  style={{ padding: '32px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', transition: 'border-color 0.2s' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--accent)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'var(--border)'; }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '14px' }}>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--accent)', letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 500 }}>Research · Multi-agent AI · Local inference</div>
+                    <span style={{ fontSize: '1.1rem', color: 'var(--faint)' }}>→</span>
+                  </div>
+                  <h3 style={{ fontWeight: 700, fontSize: '1.4rem', letterSpacing: '-0.02em', marginBottom: '8px' }}>HSI — Hierarchical Sparse Intelligence</h3>
+                  <p style={{ color: 'var(--accent)', fontSize: '0.82rem', marginBottom: '10px', fontWeight: 500 }}>
+                    22 specialist classifiers pre-process every query before an LLM ever sees it — the architecture, the benchmarks, and where it falls short.
+                  </p>
+                  <p style={{ color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.75, marginBottom: '20px' }}>
+                    A proof-of-concept multi-agent pipeline: fine-tuned DeBERTa classifiers compress language, syntax, intent, math and logic into a structured buffer that the LLM reads instead of raw text. Runs fully local via Ollama.
+                  </p>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {['22 specialists', 'Local-first (Ollama)', 'MIT open source'].map(tag => (
+                      <span key={tag} style={{ fontSize: '0.72rem', padding: '4px 10px', background: 'var(--surface-2)', border: '1px solid var(--border-2)', borderRadius: '100px', color: 'var(--muted)' }}>{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </a>
             </div>
           </FadeIn>
         </div>
