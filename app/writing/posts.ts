@@ -12,6 +12,15 @@ export interface Post {
 
 export const posts: Post[] = [
   {
+    slug: 'grokking-orbital-data',
+    title: 'Grokking on real astronomical data',
+    date: '2026-07-05',
+    blurb:
+      'Grokking has mostly been shown on clean, synthetic tasks. I trained a tiny transformer on real planetary orbits, diagnosed two dataset confounds that produced a fake negative result, got a genuine 24,000-step delayed generalization once they were fixed, then ran 100 seeds to check how often that actually happens.',
+    tags: ['Grokking', 'Research', 'Built in public'],
+    readingTime: '10 min read',
+  },
+  {
     slug: 'hsi-mvp',
     title: 'HSI: Hierarchical Sparse Intelligence',
     date: '2026-07-04',
