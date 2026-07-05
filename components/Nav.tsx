@@ -39,6 +39,15 @@ export default function Nav() {
 
   const navLinks = (
     <>
+      <a
+        href="https://contact.ishsitotombe.co.uk"
+        style={linkStyle}
+        onMouseEnter={e => (e.currentTarget.style.color = "#141414")}
+        onMouseLeave={e => (e.currentTarget.style.color = "#5b5648")}
+        onClick={() => setMenuOpen(false)}
+      >
+        Contact
+      </a>
       <Link
         href="/writing"
         style={linkStyle}
