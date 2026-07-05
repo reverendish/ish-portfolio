@@ -12,6 +12,15 @@ export interface Post {
 
 export const posts: Post[] = [
   {
+    slug: 'hsi-mvp',
+    title: 'HSI: Hierarchical Sparse Intelligence',
+    date: '2026-07-04',
+    blurb:
+      'A proof-of-concept multi-agent pipeline where 22 specialist classifiers pre-process every query before it reaches an LLM, and what happened when I actually built and benchmarked it.',
+    tags: ['Multi-agent', 'Research', 'Built in public'],
+    readingTime: '6 min read',
+  },
+  {
     slug: 'flow-vs-fisher',
     title: 'Testing a slime-mould idea against Fisher information',
     date: '2026-06-23',
