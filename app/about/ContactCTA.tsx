@@ -9,7 +9,7 @@ export default function ContactCTA() {
       style={{
         display: 'inline-flex', alignItems: 'center', gap: '6px',
         background: 'var(--accent)', color: 'var(--accent-fg)',
-        fontWeight: 700, padding: '13px 28px', borderRadius: '8px',
+        fontWeight: 700, padding: '13px 28px', borderRadius: 'var(--radius)',
         border: 'none', cursor: 'pointer', fontSize: '0.95rem',
         fontFamily: 'inherit',
       }}

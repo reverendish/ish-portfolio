@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
+import { Source_Serif_4 } from 'next/font/google';
 import "./globals.css";
+
+const sourceSerif = Source_Serif_4({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-serif',
+});
 import ContactModalProvider from "@/components/ContactModalProvider";
 
 export const metadata: Metadata = {
@@ -26,7 +33,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en-GB" className={`${GeistSans.variable} ${GeistMono.variable} ${sourceSerif.variable}`}>
       <head>
         {/* Prevent theme flash — reads localStorage before React hydrates */}
         <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.setAttribute('data-theme',t);})();` }} />

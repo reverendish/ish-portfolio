@@ -23,11 +23,11 @@ export default function ThemeToggle() {
       aria-label="Toggle theme"
       style={{
         background: 'transparent',
-        border: '1px solid var(--border-2)',
-        borderRadius: '8px',
+        border: '1px solid #ddd3bf',
+        borderRadius: '4px',
         padding: '6px 10px',
         cursor: 'pointer',
-        color: 'var(--muted)',
+        color: '#5b5648',
         fontSize: '0.8rem',
         fontFamily: 'var(--font-geist-mono)',
         letterSpacing: '0.04em',

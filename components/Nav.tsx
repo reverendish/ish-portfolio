@@ -28,10 +28,12 @@ export default function Nav() {
   }, []);
 
   const linkStyle = {
-    fontSize: "0.875rem",
-    color: "var(--muted)" as const,
+    fontSize: "0.8rem",
+    color: "#5b5648" as const,
     textDecoration: "none",
-    fontWeight: 500,
+    fontWeight: 600,
+    textTransform: "uppercase" as const,
+    letterSpacing: "0.05em",
     transition: "color 0.2s ease",
   };
 
@@ -40,8 +42,8 @@ export default function Nav() {
       <a
         href="https://compliance.ishsitotombe.co.uk"
         style={linkStyle}
-        onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-        onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
+        onMouseEnter={e => (e.currentTarget.style.color = "#141414")}
+        onMouseLeave={e => (e.currentTarget.style.color = "#5b5648")}
         onClick={() => setMenuOpen(false)}
       >
         Compliance
@@ -49,8 +51,8 @@ export default function Nav() {
       <Link
         href="/writing"
         style={linkStyle}
-        onMouseEnter={e => (e.currentTarget.style.color = "var(--text)")}
-        onMouseLeave={e => (e.currentTarget.style.color = "var(--muted)")}
+        onMouseEnter={e => (e.currentTarget.style.color = "#141414")}
+        onMouseLeave={e => (e.currentTarget.style.color = "#5b5648")}
         onClick={() => setMenuOpen(false)}
       >
         Writing
@@ -73,13 +75,12 @@ export default function Nav() {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        background: scrolled || menuOpen ? "var(--nav-bg)" : "transparent",
-        backdropFilter: scrolled || menuOpen ? "blur(12px)" : "none",
-        borderBottom: scrolled ? "1px solid var(--border)" : "1px solid transparent",
-        transition: "all 0.3s ease",
+        background: "#ffffff",
+        borderBottom: scrolled ? "1px solid #e5ddce" : "1px solid transparent",
+        transition: "border-color 0.3s ease",
       }}
     >
-      <Link href="/" style={{ fontWeight: 700, fontSize: "1.6rem", letterSpacing: "-0.03em", color: "var(--text)", textDecoration: "none" }}>
+      <Link href="/" style={{ fontFamily: "var(--font-serif), Georgia, serif", fontWeight: 700, fontSize: "1.5rem", letterSpacing: "-0.02em", color: "#141414", textDecoration: "none" }}>
         ish
       </Link>
       <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
@@ -91,11 +92,11 @@ export default function Nav() {
             aria-expanded={menuOpen}
             style={{
               background: "transparent",
-              border: "1px solid var(--border-2)",
-              borderRadius: "6px",
+              border: "1px solid #ddd3bf",
+              borderRadius: "4px",
               padding: "6px 8px",
               cursor: "pointer",
-              color: "var(--muted)",
+              color: "#5b5648",
               fontSize: "1.1rem",
               lineHeight: 1,
               fontFamily: "monospace",
@@ -132,9 +133,8 @@ export default function Nav() {
             top: "60px",
             left: 0,
             right: 0,
-            background: "var(--nav-bg)",
-            backdropFilter: "blur(12px)",
-            borderBottom: "1px solid var(--border)",
+            background: "#ffffff",
+            borderBottom: "1px solid #e5ddce",
             padding: "16px clamp(16px, 4vw, 40px)",
             display: "flex",
             flexDirection: "column",

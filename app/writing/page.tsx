@@ -5,8 +5,8 @@ import ContactModalProvider from '@/components/ContactModalProvider';
 import { posts } from './posts';
 
 export const metadata: Metadata = {
-  title: 'Writing — Ish Sitotombe',
-  description: 'Building in public — notes on software, automations, and research experiments.',
+  title: 'Writing · Ish Sitotombe',
+  description: 'Building in public, notes on software, automations, and research experiments.',
 };
 
 export default function WritingIndex() {
@@ -25,14 +25,14 @@ export default function WritingIndex() {
             Notes &amp; experiments
           </h1>
           <p style={{ color: 'var(--muted)', fontSize: '1.05rem', lineHeight: 1.85, maxWidth: '620px' }}>
-            Building in public — software, automations, and the research I run on the side.
+            Building in public, software, automations, and the research I run on the side.
             Written to be read, not to impress.
           </p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '48px' }}>
             {sorted.map(p => (
               <Link key={p.slug} href={`/writing/${p.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
-                <article className="post-card" style={{ padding: '28px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px' }}>
+                <article className="post-card" style={{ padding: '28px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)' }}>
                   <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap' }}>
                     <time style={{ fontSize: '0.78rem', color: 'var(--faint)' }} dateTime={p.date}>
                       {new Date(p.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}

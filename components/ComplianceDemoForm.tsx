@@ -15,7 +15,7 @@ interface ResultLine {
   fail?: boolean;
 }
 
-export default function ComplianceDemoForm({ accentColor = '#a5b4fc' }: Props) {
+export default function ComplianceDemoForm({ accentColor = '#e8874a' }: Props) {
   const [url, setUrl]         = useState('');
   const [state, setState]     = useState<DemoState>('idle');
   const [lines, setLines]     = useState<ResultLine[]>([]);
@@ -32,7 +32,7 @@ export default function ComplianceDemoForm({ accentColor = '#a5b4fc' }: Props) {
     if (state === 'loading') return;
 
     if (!apiUrl) {
-      setError('Demo not available yet — check back soon.');
+      setError('Demo not available yet, check back soon.');
       setState('error');
       return;
     }
@@ -115,7 +115,7 @@ export default function ComplianceDemoForm({ accentColor = '#a5b4fc' }: Props) {
     padding: '8px 12px',
     background: 'var(--bg)',
     border: '1px solid var(--border-2)',
-    borderRadius: '6px',
+    borderRadius: 'var(--radius)',
     color: 'var(--text)',
     fontSize: '0.78rem',
     fontFamily: 'var(--font-geist-mono)',
@@ -152,7 +152,7 @@ export default function ComplianceDemoForm({ accentColor = '#a5b4fc' }: Props) {
           style={{
             background: state === 'loading' ? 'transparent' : accentColor,
             border: state === 'loading' ? '1px solid var(--border-2)' : 'none',
-            borderRadius: '6px',
+            borderRadius: 'var(--radius)',
             padding: '7px 14px',
             fontSize: '0.75rem',
             fontWeight: 700,
@@ -196,7 +196,7 @@ export default function ComplianceDemoForm({ accentColor = '#a5b4fc' }: Props) {
               marginTop: '8px',
               background: 'transparent',
               border: '1px solid var(--border-2)',
-              borderRadius: '6px',
+              borderRadius: 'var(--radius)',
               padding: '5px 12px',
               fontSize: '0.72rem',
               color: 'var(--muted)',

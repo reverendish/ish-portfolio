@@ -7,7 +7,7 @@ interface Props {
   accentColor?: string;
 }
 
-export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
+export default function OutreachDemoForm({ accentColor = '#e8874a' }: Props) {
   const [name, setName]             = useState('');
   const [email, setEmail]           = useState('');
   const [state, setState]           = useState<DemoState>('idle');
@@ -64,7 +64,7 @@ export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
     padding: '9px 12px',
     background: 'var(--bg)',
     border: '1px solid var(--border-2)',
-    borderRadius: '6px',
+    borderRadius: 'var(--radius)',
     color: 'var(--text)',
     fontSize: '0.82rem',
     fontFamily: 'inherit',
@@ -121,7 +121,7 @@ export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
             marginTop: '16px',
             background: 'transparent',
             border: '1px solid var(--border-2)',
-            borderRadius: '6px',
+            borderRadius: 'var(--radius)',
             padding: '6px 14px',
             fontSize: '0.75rem',
             color: 'var(--muted)',
@@ -142,7 +142,7 @@ export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
       style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: '10px', minHeight: '240px' }}
     >
       <p style={{ fontSize: '0.75rem', color: 'var(--muted)', margin: '0 0 4px', lineHeight: 1.5 }}>
-        Enter your name or business name — I'll generate a personalised cold email and send it straight to your inbox.
+        Enter your name or business name and I'll generate a personalised cold email, sent straight to your inbox.
       </p>
 
       <div>
@@ -180,7 +180,7 @@ export default function OutreachDemoForm({ accentColor = '#a5b4fc' }: Props) {
           background: accentColor,
           color: '#0a0a0f',
           border: 'none',
-          borderRadius: '6px',
+          borderRadius: 'var(--radius)',
           padding: '9px 18px',
           fontSize: '0.8rem',
           fontWeight: 700,

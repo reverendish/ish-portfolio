@@ -5,7 +5,7 @@ export default function BrowserFrame({ url, children }: { url: string; children:
     <div style={{
       background: 'var(--surface)',
       border: '1px solid var(--border-2)',
-      borderRadius: '12px',
+      borderRadius: 'var(--radius)',
       overflow: 'hidden',
       boxShadow: '0 24px 64px rgba(0,0,0,0.3)',
     }}>
@@ -27,7 +27,7 @@ export default function BrowserFrame({ url, children }: { url: string; children:
           flex: 1,
           background: 'var(--bg)',
           border: '1px solid var(--border)',
-          borderRadius: '6px',
+          borderRadius: 'var(--radius)',
           padding: '4px 12px',
           fontSize: '0.72rem',
           color: 'var(--muted)',

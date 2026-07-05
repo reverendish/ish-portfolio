@@ -5,7 +5,7 @@ import ContactCTA from './ContactCTA';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About — Ish Sitotombe',
+  title: 'About · Ish Sitotombe',
   description: 'Business automations and custom software. Based in Colchester, UK.',
 };
 
@@ -47,7 +47,7 @@ export default function AboutPage() {
               I build business automations and custom software. Based in Colchester, UK.
             </p>
             <p style={{ color: 'var(--muted)', fontSize: '1.05rem', lineHeight: 1.85 }}>
-              I spent five years in construction before switching industries at the start of 2026. No degree, no bootcamp — I taught myself and built the tools on this site.
+              I spent five years in construction before switching industries at the start of 2026. No degree, no bootcamp. I taught myself and built the tools on this site.
             </p>
             <p style={{ color: 'var(--muted)', fontSize: '1.05rem', lineHeight: 1.85 }}>
               If you&apos;ve got a process eating your team&apos;s time and want it built properly without agency overhead,{' '}
@@ -92,7 +92,7 @@ export default function AboutPage() {
             href="https://github.com/reverendish"
             target="_blank"
             rel="noopener"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--text)', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem', padding: '10px 18px', border: '1px solid var(--border-2)', borderRadius: '8px' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--text)', textDecoration: 'none', fontWeight: 600, fontSize: '0.9rem', padding: '10px 18px', border: '1px solid var(--border-2)', borderRadius: 'var(--radius)' }}
           >
             github.com/reverendish ↗
           </a>
@@ -100,7 +100,7 @@ export default function AboutPage() {
 
         {/* ── CTA ── */}
         <section style={{ maxWidth: '760px', margin: '0 auto', padding: '0 32px 100px' }}>
-          <div style={{ padding: '40px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '12px', textAlign: 'center' }}>
+          <div style={{ padding: '40px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', textAlign: 'center' }}>
             <h2 style={{ fontSize: 'clamp(1.4rem, 3vw, 2rem)', fontWeight: 800, letterSpacing: '-0.03em', marginBottom: '12px' }}>
               Ready to automate something?
             </h2>

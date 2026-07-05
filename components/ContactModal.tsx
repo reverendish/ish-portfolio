@@ -36,12 +36,12 @@ function ContactForm({ onClose }: { onClose: () => void }) {
     <div style={{ textAlign: 'center', padding: '48px 0' }}>
       <div style={{ fontSize: '2rem', marginBottom: '12px' }}>✓</div>
       <h3 style={{ fontWeight: 600, marginBottom: '8px', color: 'var(--text)' }}>
-        Got it — I'll reply within 24 hours.
+        Got it, I'll reply within 24 hours.
       </h3>
       <p style={{ color: 'var(--muted)', marginBottom: '24px' }}>Check your inbox.</p>
       <button
         onClick={onClose}
-        style={{ background: 'var(--accent)', color: 'var(--accent-fg)', border: 'none', borderRadius: '8px', padding: '10px 24px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}
+        style={{ background: 'var(--accent)', color: 'var(--accent-fg)', border: 'none', borderRadius: 'var(--radius)', padding: '10px 24px', fontSize: '0.9rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}
       >
         Close
       </button>
@@ -51,7 +51,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
   const inputStyle: React.CSSProperties = {
     width: '100%', padding: '13px 16px',
     background: 'var(--surface)', border: '1px solid var(--border-2)',
-    borderRadius: '8px', color: 'var(--text)', fontSize: '0.95rem',
+    borderRadius: 'var(--radius)', color: 'var(--text)', fontSize: '0.95rem',
     fontFamily: 'inherit', outline: 'none', transition: 'border-color 0.15s, box-shadow 0.15s',
   };
 
@@ -93,7 +93,7 @@ function ContactForm({ onClose }: { onClose: () => void }) {
       <button
         type="submit"
         disabled={sending}
-        style={{ background: 'var(--accent)', color: 'var(--accent-fg)', fontWeight: 700, border: 'none', borderRadius: '8px', padding: '14px', fontSize: '1rem', cursor: sending ? 'default' : 'pointer', fontFamily: 'inherit', opacity: sending ? 0.7 : 1, transition: 'opacity 0.15s' }}
+        style={{ background: 'var(--accent)', color: 'var(--accent-fg)', fontWeight: 700, border: 'none', borderRadius: 'var(--radius)', padding: '14px', fontSize: '1rem', cursor: sending ? 'default' : 'pointer', fontFamily: 'inherit', opacity: sending ? 0.7 : 1, transition: 'opacity 0.15s' }}
       >
         {sending ? 'Sending…' : 'Send it over'}
       </button>
@@ -167,7 +167,7 @@ export default function ContactModal({ isOpen, onClose }: Props) {
         style={{
           background: 'var(--bg)',
           border: '1px solid var(--border-2)',
-          borderRadius: '16px',
+          borderRadius: 'var(--radius)',
           padding: '40px',
           width: '100%',
           maxWidth: '560px',
@@ -188,7 +188,7 @@ export default function ContactModal({ isOpen, onClose }: Props) {
             color: 'var(--muted)', fontSize: '1rem',
             cursor: 'pointer', width: '32px', height: '32px',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            borderRadius: '6px', transition: 'background 0.15s',
+            borderRadius: 'var(--radius)', transition: 'background 0.15s',
             fontFamily: 'inherit',
           }}
           onMouseEnter={e => (e.currentTarget.style.background = 'var(--surface-2)')}
