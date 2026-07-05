@@ -29,8 +29,8 @@ export default function Home() {
             Building things, and writing down what actually happened.
           </h1>
           <p style={{ color: 'var(--muted)', fontSize: '1.05rem', lineHeight: 1.85, maxWidth: '620px' }}>
-            Building in public, software, automations, and the research I run on the side.
-            Written to be read, not to impress.
+            Software, automations, and whatever experiment I'm running this week.
+            Some of it ships. Some of it just proves a point.
           </p>
         </section>
 
