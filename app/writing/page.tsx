@@ -41,14 +41,9 @@ export default function WritingIndex() {
                   <h2 style={{ fontWeight: 700, fontSize: '1.4rem', letterSpacing: '-0.02em', marginBottom: '10px', color: 'var(--text)' }}>
                     {p.title}
                   </h2>
-                  <p style={{ color: 'var(--muted)', fontSize: '0.95rem', lineHeight: 1.75, marginBottom: '18px' }}>
+                  <p style={{ color: 'var(--muted)', fontSize: '0.95rem', lineHeight: 1.75 }}>
                     {p.blurb}
                   </p>
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                    {p.tags.map(t => (
-                      <span key={t} style={{ fontSize: '0.72rem', padding: '4px 10px', background: 'var(--surface-2)', border: '1px solid var(--border-2)', borderRadius: '100px', color: 'var(--muted)' }}>{t}</span>
-                    ))}
-                  </div>
                 </article>
               </Link>
             ))}
