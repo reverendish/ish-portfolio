@@ -205,24 +205,20 @@ export default function Home() {
                     {demo.desc}
                   </p>
                 </div>
-                <a
-                  href={demo.href}
+                <button
+                  onClick={openModal}
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: '6px',
                     background: 'var(--accent)', color: 'var(--accent-fg)',
                     fontWeight: 700, padding: '11px 22px', borderRadius: 'var(--radius)',
-                    textDecoration: 'none', fontSize: '0.875rem', width: 'fit-content',
-                    transition: 'opacity 0.2s',
+                    border: 'none', fontSize: '0.875rem', width: 'fit-content',
+                    cursor: 'pointer', fontFamily: 'inherit', transition: 'opacity 0.2s',
                   }}
                   onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
                   onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
                 >
-                  {demo.type === 'interactive' ? 'Try the full tool →' : 'Use the free tool →'}
-                </a>
-                <p style={{ fontSize: '0.78rem', color: 'var(--faint)' }}>
-                  Want this for your business?{' '}
-                  <button onClick={openModal} style={{ background: 'none', border: 'none', padding: 0, color: 'var(--accent)', fontSize: '0.78rem', cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline', textUnderlineOffset: '3px' }}>Get in touch</button>
-                </p>
+                  Want this for your business? Get in touch →
+                </button>
               </div>
             </div>
           </FadeIn>
